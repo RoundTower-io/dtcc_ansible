@@ -1,7 +1,7 @@
 ---
 
 - name: vlan testing
-  hosts: n9kv1
+  hosts: switches
   connection: local
   gather_facts: no
 
