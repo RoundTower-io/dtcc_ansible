@@ -1,0 +1,9 @@
+switches: [n9kv1, n9kv2]
+vlan_number: 103
+vlan_name: test_103
+ports:
+    n9kv1:
+        Ethernet1/8
+    n9kv2:
+        Ethernet1/9
+

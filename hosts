@@ -16,7 +16,7 @@ all:
           hosts:
               n9kv1:
                 ansible_port: 2200
-                ansible_host: 192.168.11.108
+                ansible_host: 192.168.11.111
               n9kv2:
                 ansible_port: 2201
                 ansible_host: 192.168.11.110
