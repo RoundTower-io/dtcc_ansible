@@ -6,11 +6,15 @@
 
   tasks:
     - debug:
-        msg: "{{switches}}"
+        msg: "{{inventory_hostname}}"
+
+#    - debug:
+#        msg: "{{ ports[item]}}"
+#      with_items: "{{switches}}"
+#      when: switches == ports[item]
 
     - nxos_vlan:
         vlan_id: "{{ vlan_number }}"
         name: "{{ vlan_name }}"
         state: present
-        interfaces: "{{ ports[item]}}"
-      with_items: "{{switches}}"
+        interfaces: "{{ ports[inventory_hostname]}}"
