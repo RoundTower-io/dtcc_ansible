@@ -1,0 +1,26 @@
+all:
+  vars:
+      ansible_connection: network_cli
+      ansible_network_os: nxos
+      ansible_user:
+      ansible_password:
+
+  children:
+      switches:
+          hosts:
+              n95ksw1:
+                ansible_host: 172.26.141.227
+              n95ksw2:
+                ansible_host: 172.26.141.228
+              n7ksw1:
+                ansible_host: 172.26.141.200
+              n7ksw2:
+                ansible_host: 172.26.141.210
+      routers:
+          hosts:
+              asr1k01:
+                ansible_host: 172.26.141.229
+              isr4k01:
+                ansible_host: 172.26.141.232
+              isr4k02:
+                ansible_host: 172.26.141.233
