@@ -1,11 +1,4 @@
 ---
-
-# TODO
-# How to handle a VLAN that already exists on any machine?
-# How to error if VLAN exists?
-# What happens if the definition is *partially* right and we create a legit vlan, but not all of it?
-#
-#
 - name: vlan testing
   hosts: switches
   any_errors_fatal: true
@@ -13,8 +6,6 @@
   gather_facts: no
 
   tasks:
-    - debug:
-        msg: "{{inventory_hostname}}"
 
     - name: Check if VLAN is on the device
       nxos_vlan:
@@ -27,12 +18,9 @@
         msg: "VLAN {{ vlan_number }} already defined on {{ inventory_hostname }}"
       when: vlan_found.failed == False
 
-    - debug:
-        msg: "vlan found is {{vlan_found.failed}}"
-
     - name: Build VLAN
       nxos_vlan:
         vlan_id: "{{ vlan_number }}"
         name: "{{ vlan_name }}"
         state: present
-        interfaces: "{{ ports[inventory_hostname]}}"
+        interfaces: "{{ ports[inventory_hostname] }}"
