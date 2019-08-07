@@ -8,6 +8,7 @@
 #
 - name: vlan testing
   hosts: switches
+  any_errors_fatal: true
   connection: local
   gather_facts: no
 
@@ -15,10 +16,19 @@
     - debug:
         msg: "{{inventory_hostname}}"
 
-#    - name: Ensure VLAN is NOT on the device
-#      nxos_vlan:
-#        vlan_id: "{{ vlan_number }}"
-#        state: absent
+    - name: Check if VLAN is on the device
+      nxos_vlan:
+        vlan_id: "{{ vlan_number }}"
+        state: present
+      register: vlan_found
+
+    - name: Fail if we already have the VLAN present
+      fail:
+        msg: "VLAN {{ vlan_number }} already defined on {{ inventory_hostname }}"
+      when: vlan_found.failed == False
+
+    - debug:
+        msg: "vlan found is {{vlan_found.failed}}"
 
     - name: Build VLAN
       nxos_vlan:
