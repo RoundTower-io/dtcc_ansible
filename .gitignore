@@ -102,3 +102,11 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+.idea/$PRODUCT_WORKSPACE_FILE$
+.idea/.gitignore
+.idea/dictionaries
+.idea/dtcc_ansible.iml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
