@@ -6,5 +6,5 @@ ports:
     - Ethernet1/88
     - Ethernet1/89
     - Ethernet1/90
-  n9kv2:
-    - Ethernet1/99
+  n95ksw2:
+    - Ethernet2/10
