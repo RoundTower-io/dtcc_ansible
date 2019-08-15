@@ -7,8 +7,6 @@
 
   tasks:
 
-    - debug: msg="My Secret value is {{ansible_password | replace('\n', '')}}"
-
     - name: Check if VLAN is on the device
       nxos_vlan:
         vlan_id: "{{ vlan_number }}"
