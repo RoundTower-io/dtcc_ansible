@@ -6,17 +6,9 @@
   gather_facts: no
 
   tasks:
-
-    - name: Check if VLAN is on the device
-      nxos_vlan:
-        vlan_id: "{{ vlan_number }}"
-        state: present
-      register: vlan_found
-
-    - name: Fail if we already have the VLAN present
-      fail:
-        msg: "VLAN {{ vlan_number }} already defined on {{ inventory_hostname }}"
-      when: vlan_found.failed == False
+    - name: Get Nexus facts
+       nxos_facts:
+       register: data
 
     - name: Build VLAN
       nxos_vlan:
@@ -24,3 +16,4 @@
         name: "{{ vlan_name }}"
         state: present
         interfaces: "{{ ports[inventory_hostname] }}"
+      when: vlan_number not in data.ansible_facts.vlan_list
