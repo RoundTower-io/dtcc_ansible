@@ -2,7 +2,7 @@
 vlan_number: 103
 vlan_name: test_103
 ports:
-  n95ksw2:
+  n95ksw1:
     - Ethernet1/88
     - Ethernet1/89
     - Ethernet1/90
