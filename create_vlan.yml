@@ -6,14 +6,9 @@
   gather_facts: no
 
   tasks:
-    - name: Get Nexus facts
-       nxos_facts:
-       register: data
-
     - name: Build VLAN
       nxos_vlan:
         vlan_id: "{{ vlan_number }}"
         name: "{{ vlan_name }}"
         state: present
         interfaces: "{{ ports[inventory_hostname] }}"
-      when: vlan_number not in data.ansible_facts.vlan_list
