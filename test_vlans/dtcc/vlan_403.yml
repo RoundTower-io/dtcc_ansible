@@ -3,8 +3,8 @@ vlan_number: 403
 vlan_name: tennis_403
 ports:
   n95ksw1:
-    - Ethernet1/88
-    - Ethernet1/89
-    - Ethernet1/90
+    - Ethernet1/30
+    - Ethernet1/31
+    - Ethernet1/33
   n95ksw2:
     - Ethernet2/10
