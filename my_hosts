@@ -15,8 +15,9 @@ all:
       switches:
           hosts:
               n9kv1:
+                # Use our localhost ip address with port 200 for vagrant access
                 ansible_port: 2200
-                ansible_host: 192.168.11.111
+                ansible_host: 192.168.11.108
               n9kv2:
                 ansible_port: 2201
                 ansible_host: 192.168.11.110
