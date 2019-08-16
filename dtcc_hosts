@@ -14,7 +14,7 @@ all:
   children:
       switches:
           hosts:
-              jer-lab-n95ksw1:
+              n95ksw1:
                 ansible_host: 172.26.141.227
               n95ksw2:
                 ansible_host: 172.26.141.228
