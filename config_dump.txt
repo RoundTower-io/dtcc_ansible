@@ -1,0 +1,6 @@
+DEFAULT_DEBUG(env: ANSIBLE_DEBUG) = True
+DEFAULT_LOG_PATH(env: ANSIBLE_LOG_PATH) = /home/automation/ansible.log
+DEFAULT_VAULT_PASSWORD_FILE(/home/automation/dtcc_ansible/ansible.cfg) = /home/automation/.vault_password_file
+HOST_KEY_CHECKING(/home/automation/dtcc_ansible/ansible.cfg) = False
+INTERPRETER_PYTHON(/home/automation/dtcc_ansible/ansible.cfg) = auto_legacy_silent
+
