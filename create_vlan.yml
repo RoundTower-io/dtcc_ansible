@@ -10,9 +10,6 @@
   gather_facts: no
 
   tasks:
-    - debug:
-        msg: "{{ports[inventory_hostname]}}"
-      when: inventory_hostname in ports
 
     - name: Build VLAN
       nxos_vlan:
@@ -20,3 +17,4 @@
         name: "{{ vlan_name }}"
         state: present
         interfaces: "{{ ports[inventory_hostname] }}"
+      when: inventory_hostname in ports
