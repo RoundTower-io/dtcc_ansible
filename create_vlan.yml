@@ -24,6 +24,12 @@
         when: item.stdout[0].find('vlan') != -1
         loop: "{{ vint.results | flatten(levels=1) }}"
 
+      - name: Ensure ports are in an unconfigured state
+        nxos_l2_interface:
+          name: "{{item}}"
+          state: unconfigured
+        loop: "{{ ports[inventory_hostname] | flatten(levels=1) }}"
+
       - name: Build VLAN
         nxos_vlan:
           vlan_id: "{{ vlan_number }}"
