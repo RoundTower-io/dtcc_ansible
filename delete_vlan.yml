@@ -10,8 +10,16 @@
   gather_facts: no
 
   tasks:
-   - name: Delete a VLAN
-     nxos_vlan:
-       vlan_id: "{{ vlan_number }}"
-       state: absent
-     when: inventory_hostname in ports
+    - name: Remove a VLAN
+      block:
+      - name: Ensure Eth interfaces are not attached to a VLAN
+        nxos_l2_interface:
+          name: "{{item}}"
+          state: unconfigured
+        loop: "{{ ports[inventory_hostname] | flatten(levels=1) }}"
+
+      - name: Delete a VLAN
+        nxos_vlan:
+          vlan_id: "{{ vlan_number }}"
+          state: absent
+      when: inventory_hostname in ports
