@@ -1,0 +1,10 @@
+---
+vlan_number: 404
+vlan_name: tennis_404
+ports:
+  n95ksw1:
+    - Eth1/20
+    - Eth1/21
+    - Eth1/23
+  n95ksw2:
+    - Eth2/40
