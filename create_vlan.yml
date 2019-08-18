@@ -10,11 +10,24 @@
   gather_facts: no
 
   tasks:
+    - name: Build a VLAN
+      block:
+      - name: Audit ports used
+        nxos_command:
+          commands: show run int {{ item }}
+        register: vint
+        loop: "{{ ports[inventory_hostname] | flatten(levels=1) }}"
 
-    - name: Build VLAN
-      nxos_vlan:
-        vlan_id: "{{ vlan_number }}"
-        name: "{{ vlan_name }}"
-        state: present
-        interfaces: "{{ ports[inventory_hostname] }}"
+      - name: Check if any interfaces already in a VLAN
+        fail:
+          msg: Interface already in VLAN
+        when: item.stdout[0].find('vlan') != -1
+        loop: "{{ vint.results | flatten(levels=1) }}"
+
+      - name: Build VLAN
+        nxos_vlan:
+          vlan_id: "{{ vlan_number }}"
+          name: "{{ vlan_name }}"
+          state: present
+          interfaces: "{{ ports[inventory_hostname] }}"
       when: inventory_hostname in ports
