@@ -27,7 +27,7 @@
       - name: Check if any interfaces are port channels
         fail:
           msg: Interface is a port channel
-        when: item.stdout[0].find('Port-Channel') != -1
+        when: item.stdout[0].find('switchport mode trunk') != -1
         loop: "{{ vint.results | flatten(levels=1) }}"
 
       - name: Ensure ports are configured for layer 2
