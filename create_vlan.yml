@@ -36,6 +36,7 @@
           mode: layer2
         loop: "{{ ports[inventory_hostname] | flatten(levels=1) }}"
 
+      # Keep this?
       - name: Ensure ports are in an unconfigured state
         nxos_l2_interface:
           name: "{{item}}"
