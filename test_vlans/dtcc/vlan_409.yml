@@ -1,0 +1,9 @@
+---
+# This should fail because eth1/44 is a port channel
+vlan_number: 409
+vlan_name: tennis_409
+ports:
+  n95ksw1:
+    - Eth1/44
+  n95ksw2:
+    - Eth2/41
