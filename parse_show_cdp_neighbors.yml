@@ -1,0 +1,23 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+     contents: |
+        Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+                          S - Switch, H - Host, I - IGMP, r - Repeater,
+                          V - VoIP-Phone, D - Remotely-Managed-Device,
+                          s - Supports-STP-Dispute
+
+        Device-ID          Local Intrfce  Hldtme Capability  Platform      Port ID
+        JER-LAB-95KSW2.jer.lab.local(FGE18410JP1)
+                            Eth1/1         148    R S I s   N9K-C9508     Eth1/1
+
+        Total entries displayed: 1
+
+  tasks:
+     - debug: msg="the value of pattern.txt is {{ contents }}"
+     - name: Read in parse_genie role
+       include_role:
+         name: clay584.parse_genie
+     - name: Debug Genie Filter
+       debug:
+         msg: "{{ contents | parse_genie(command='show cdp neighbors', os='nxos') }}"

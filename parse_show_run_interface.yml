@@ -1,0 +1,26 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+     contents: |
+        !Command: show running-config interface Ethernet1/1
+        !Running configuration last done at: Sun Aug 18 23:22:42 2019
+        !Time: Tue Sep  3 23:25:59 2019
+
+        version 7.0(3)I7(6) Bios:version 08.35
+
+        interface Ethernet1/1
+          description *** VPC PEER LINK PO1 to JER-LAB-N95KSW2 1/1-2 ***
+          switchport
+          switchport mode trunk
+          switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
+          channel-group 1 mode active
+          no shutdown
+
+  tasks:
+     - debug: msg="the value of contents is {{ contents }}"
+     - name: Read in parse_genie role
+       include_role:
+         name: clay584.parse_genie
+     - name: Debug Genie Filter
+       debug:
+         msg: "{{ contents | parse_genie(command='show running-config interface', os='nxos') }}"

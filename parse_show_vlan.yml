@@ -1,0 +1,57 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+     contents: |
+        VLAN Name                             Status    Ports
+        ---- -------------------------------- --------- -------------------------------
+        1    default                          active    Po1, Po11, Po12, Po21, Eth1/1
+                                                        Eth1/2, Eth1/30, Eth1/31
+                                                        Eth1/33, Eth1/44, Eth1/45
+                                                        Eth2/4
+        99   netapps_rep                      active    Po1, Po11, Po12, Po21, Eth1/1
+                                                        Eth1/2, Eth1/44, Eth1/45, Eth2/4
+        103  VLAN0103                         active    Po1, Po11, Po12, Po21, Eth1/1
+                                                        Eth1/2, Eth1/44, Eth1/45, Eth2/4
+        142  LAB-vlan                         active    Po1, Po11, Po12, Po21, Eth1/1
+                                                        Eth1/2, Eth1/3, Eth1/44, Eth1/45
+                                                        Eth2/3, Eth2/4
+        200  VLAN0200                         active    Po3, Po11, Po12, Po21, Eth1/44
+                                                        Eth1/45, Eth2/2, Eth2/4, Eth2/47
+                                                        Eth2/48
+        404  tennis_404                       active    Po1, Po11, Po12, Po21, Eth1/1
+                                                        Eth1/2, Eth1/20, Eth1/21
+                                                        Eth1/23, Eth1/44, Eth1/45
+                                                        Eth2/4
+        499  KrisSam-vlan                     active    Po1, Po11, Po12, Po21, Eth1/1
+                                                        Eth1/2, Eth1/44, Eth1/45, Eth2/4
+        530  MrGarrison-vlan                  active    Po1, Po11, Po12, Po21, Eth1/1
+                                                        Eth1/2, Eth1/6, Eth1/44, Eth1/45
+                                                        Eth2/4
+        1292 Nutanix_Repl                     active    Po1, Po11, Po12, Po21, Eth1/1
+                                                        Eth1/2, Eth1/44, Eth1/45, Eth2/4
+        1400 SIFMU_Prod_Repl_Net1             active    Po11, Po12, Po21, Eth1/44
+                                                        Eth1/45, Eth2/4
+
+        VLAN Type         Vlan-mode
+        ---- -----        ----------
+        1    enet         CE
+        99   enet         CE
+        103  enet         CE
+        142  enet         CE
+        200  enet         CE
+        404  enet         CE
+        499  enet         CE
+        530  enet         CE
+        1292 enet         CE
+        1400 enet         CE
+
+        Remote SPAN VLANs
+
+  tasks:
+     - debug: msg="the value of pattern.txt is {{ contents }}"
+     - name: Read in parse_genie role
+       include_role:
+         name: clay584.parse_genie
+     - name: Debug Genie Filter
+       debug:
+         msg: "{{ contents | parse_genie(command='show vlan', os='nxos') }}"
