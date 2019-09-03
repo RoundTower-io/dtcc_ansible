@@ -1,0 +1,6 @@
+JER-LAB-N95KSW1# sh vlan name tennis_404 | i Eth
+404  tennis_404                       active    Po1, Po11, Po12, Po21, Eth1/1
+                                                Eth1/2, Eth1/20, Eth1/21
+                                                Eth1/23, Eth1/44, Eth1/45
+                                                Eth2/4
+
