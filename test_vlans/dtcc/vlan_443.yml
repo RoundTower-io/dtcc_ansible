@@ -1,8 +1,7 @@
 ---
-# This should fail because eth1/44 is a port channel
 vlan_number: 443
 vlan_name: tennis_443
-ports:
+interfaces:
   n95ksw1:
     - Eth1/24
     - Eth1/25

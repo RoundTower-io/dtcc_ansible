@@ -1,7 +1,7 @@
 ---
 vlan_number: 133
 vlan_name: test_133
-ports:
+interfaces:
   n9kv1:
     - Ethernet1/8
     - Ethernet1/9

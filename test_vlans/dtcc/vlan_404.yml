@@ -1,7 +1,7 @@
 ---
 vlan_number: 404
 vlan_name: tennis_404
-ports:
+interfaces:
   n95ksw1:
     - Eth1/20
     - Eth1/21
