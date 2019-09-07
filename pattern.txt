@@ -235,3 +235,74 @@ interface Ethernet1/1
 
 JER-LAB-N95KSW1#
 
+
+
+
+
+
+
+
+JER-LAB-N95KSW1# show cdp neigh interface po1
+Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+                  S - Switch, H - Host, I - IGMP, r - Repeater,
+                  V - VoIP-Phone, D - Remotely-Managed-Device,
+                  s - Supports-STP-Dispute
+
+Device-ID          Local Intrfce  Hldtme Capability  Platform      Port ID
+JER-LAB-95KSW2.jer.lab.local(FGE18410JP1)
+                    Eth1/1         161    R S I s   N9K-C9508     Eth1/1
+JER-LAB-95KSW2.jer.lab.local(FGE18410JP1)
+                    Eth1/2         161    R S I s   N9K-C9508     Eth1/2
+
+Total entries displayed: 2
+
+
+JER-LAB-N95KSW1# sh run interface po1
+
+!Command: show running-config interface port-channel1
+!Running configuration last done at: Wed Sep  4 01:07:06 2019
+!Time: Sun Sep  8 06:35:02 2019
+
+version 7.0(3)I7(6) Bios:version 08.35
+
+interface port-channel1
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
+  spanning-tree port type network
+  vpc peer-link
+
+JER-LAB-N95KSW1# sh run interface eth1/1
+
+!Command: show running-config interface Ethernet1/1
+!Running configuration last done at: Wed Sep  4 01:07:06 2019
+!Time: Sun Sep  8 06:35:13 2019
+
+version 7.0(3)I7(6) Bios:version 08.35
+
+interface Ethernet1/1
+  description *** VPC PEER LINK PO1 to JER-LAB-N95KSW2 1/1-2 ***
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
+  channel-group 1 mode active
+  no shutdown
+
+JER-LAB-N95KSW1# sh run interface eth1/2
+
+!Command: show running-config interface Ethernet1/2
+!Running configuration last done at: Wed Sep  4 01:07:06 2019
+!Time: Sun Sep  8 06:35:20 2019
+
+version 7.0(3)I7(6) Bios:version 08.35
+
+interface Ethernet1/2
+  description *** VPC PEER LINK PO1 to JER-LAB-N95KSW2 1/1-2 ***
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
+  channel-group 1 mode active
+  no shutdown
+
+JER-LAB-N95KSW1#
+
