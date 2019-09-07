@@ -1,7 +1,7 @@
 ---
 vlan_number: 103
 vlan_name: test_103
-ports:
+interfaces:
   n9kv1:
     - Ethernet1/88
     - Ethernet1/89

@@ -16,7 +16,7 @@
         nxos_command:
           commands: show run int {{ item }}
         register: vint
-        loop: "{{ ports[inventory_hostname] | flatten(levels=1) }}"
+        loop: "{{ interfaces[inventory_hostname] | flatten(levels=1) }}"
 
       - name: Check if any interfaces already in a VLAN
         fail:
@@ -34,19 +34,19 @@
         nxos_interface:
           name: "{{item}}"
           mode: layer2
-        loop: "{{ ports[inventory_hostname] | flatten(levels=1) }}"
+        loop: "{{ interfaces[inventory_hostname] | flatten(levels=1) }}"
 
       # Keep this?
       - name: Ensure ports are in an unconfigured state
         nxos_l2_interface:
           name: "{{item}}"
           state: unconfigured
-        loop: "{{ ports[inventory_hostname] | flatten(levels=1) }}"
+        loop: "{{ interfaces[inventory_hostname] | flatten(levels=1) }}"
 
       - name: Build VLAN
         nxos_vlan:
           vlan_id: "{{ vlan_number }}"
           name: "{{ vlan_name }}"
           state: present
-          interfaces: "{{ ports[inventory_hostname] }}"
+          interfaces: "{{ interfaces[inventory_hostname] }}"
       when: inventory_hostname in ports
