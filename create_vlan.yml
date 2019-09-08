@@ -101,7 +101,7 @@
         nxos_command:
             commands: show cdp neighbors int {{ item }}
         register: port_channel_cdp_neighbors
-        loop: port_channels
+        loop: " {{ port_channels }}"
 
       - name: Debug port channel cdp neighbors
         debug:
