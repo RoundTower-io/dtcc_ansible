@@ -107,5 +107,4 @@
         debug:
           var: port_channel_cdp_neighbors
 
-
-      when: inventory_hostname in ports
+      when: inventory_hostname in interfaces
