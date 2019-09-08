@@ -16,10 +16,11 @@
         nxos_l2_interface:
           name: "{{item}}"
           state: unconfigured
-        loop: "{{ interfaces[inventory_hostname] | flatten(levels=1) }}"
+        loop: "{{ interfaces[inventory_hostname] }}"
 
       - name: Delete a VLAN
         nxos_vlan:
           vlan_id: "{{ vlan_number }}"
           state: absent
-      when: inventory_hostname in ports
+
+      when: inventory_hostname in interfaces
