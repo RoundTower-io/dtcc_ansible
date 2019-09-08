@@ -1,6 +1,7 @@
 - hosts: localhost
   gather_facts: no
   vars:
+     host: n95ksw1
      contents: |
         VLAN Name                             Status    Ports
         ---- -------------------------------- --------- -------------------------------
@@ -49,9 +50,53 @@
 
   tasks:
      - debug: msg="the value of pattern.txt is {{ contents }}"
+
+     - name: get host interfaces
+       set_fact:
+          host_interfaces: "{{interfaces[host]}}"
+
+     - name: show host_interfaces
+       debug:
+          var: host_interfaces
+
+     - name: Normalize interface names
+       set_fact:
+         host_interfaces: "{{ host_interfaces | normalize_interface_names }}"
+
+     - name: debug new host_interfaces
+       debug:
+         var: host_interfaces
+
      - name: Read in parse_genie role
        include_role:
          name: clay584.parse_genie
+
+     - name: Save parsed output
+       set_fact:
+          parsed_output: "{{ contents | parse_genie(command='show vlan', os='nxos') }}"
+
+     - name: set vlan number
+       set_fact:
+          vlan: 404
+
      - name: Debug Genie Filter
        debug:
-         msg: "{{ contents | parse_genie(command='show vlan', os='nxos') }}"
+         var: parsed_output
+
+     - name: Set the vlan_interfaces fact
+       set_fact:
+         vlan_interfaces: "{{ parsed_output['vlans'][vlan|string]['interfaces'] }}"
+
+     - name: Show vlan_interfaces
+       debug:
+         var: vlan_interfaces
+
+     - name: Get trunk candidate interfaces
+       set_fact:
+          trunk_candidates: "{{ vlan_interfaces | difference(host_interfaces) }}"
+
+     - name: Show trunk_candidates
+       debug:
+         var: trunk_candidates
+
+

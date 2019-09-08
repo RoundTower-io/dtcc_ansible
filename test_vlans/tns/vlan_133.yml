@@ -8,3 +8,6 @@ interfaces:
     - Ethernet1/10
   n9kv2:
     - Ethernet1/29
+    - Ethernet1/30
+    - Ethernet1/31
+    - Ethernet1/32

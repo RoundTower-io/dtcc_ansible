@@ -16,32 +16,32 @@
         nxos_command:
           commands: show run int {{ item }}
         register: vint
-        loop: "{{ interfaces[inventory_hostname] | flatten(levels=1) }}"
+        loop: "{{ interfaces[inventory_hostname] }}"
 
       - name: Check if any interfaces already in a VLAN
         fail:
           msg: Interface already in VLAN
         when: item.stdout[0].find('vlan') != -1
-        loop: "{{ vint.results | flatten(levels=1) }}"
+        loop: "{{ vint.results }}"
 
       - name: Check if any interfaces are port channels
         fail:
           msg: Interface is a port channel
         when: item.stdout[0].find('switchport mode trunk') != -1
-        loop: "{{ vint.results | flatten(levels=1) }}"
+        loop: "{{ vint.results }}"
 
       - name: Ensure ports are configured for layer 2
         nxos_interface:
           name: "{{item}}"
           mode: layer2
-        loop: "{{ interfaces[inventory_hostname] | flatten(levels=1) }}"
+        loop: "{{ interfaces[inventory_hostname] }}"
 
       # Keep this?
       - name: Ensure ports are in an unconfigured state
         nxos_l2_interface:
           name: "{{item}}"
           state: unconfigured
-        loop: "{{ interfaces[inventory_hostname] | flatten(levels=1) }}"
+        loop: "{{ interfaces[inventory_hostname] }}"
 
       - name: Build VLAN
         nxos_vlan:
@@ -49,4 +49,63 @@
           name: "{{ vlan_name }}"
           state: present
           interfaces: "{{ interfaces[inventory_hostname] }}"
+
+#      - name: Check VLAN Trunks
+#        include_role:
+#          name: verify-trunk
+#        vars:
+#          vlan: "{{ vlan_number }}"
+#          # Get host names only, then pass only hosts which are NOT the current one
+#          to_hosts: "{{interfaces | flatten | difference(inventory_hostname)}}"
+#          from_host: inventory_hostname
+#          interfaces: "{{ interfaces[inventory_hostname] }}"
+
+      - name: Set names of hosts we connect to
+        set_fact:
+           to_hosts: "{{interfaces | flatten | difference(inventory_hostname)}}"
+
+      - name: Audit ports used
+        nxos_command:
+            commands: show vlan
+        register: show_vlan_contents
+
+      - name: Read in parse_genie role
+        include_role:
+            name: clay584.parse_genie
+
+      - name: Save show vlan parsed output
+        set_fact:
+           show_vlan_parsed_output: "{{ show_vlan_contents | parse_genie(command='show vlan', os='nxos') }}"
+
+      - name: show parsed_output from show vlan
+        debug:
+          var: show_vlan_parsed_output
+
+      - name: Set the vlan_interfaces fact
+        set_fact:
+          vlan_interfaces: "{{ show_vlan_parsed_output['vlans'][vlan|string]['interfaces'] }}"
+
+      - name: Show vlan_interfaces fact
+        debug:
+          var: vlan_interfaces
+
+      - name: Get trunk candidate interfaces
+        set_fact:
+           port_channels: "{{ vlan_interfaces | port_channels }}"
+
+      - name: Debug port channels
+        debug:
+          var: port_channels
+
+      - name: show cdp neighbors for port channels
+        nxos_command:
+            commands: show cdp neighbors int {{ item }}
+        register: port_channel_cdp_neighbors
+        loop: port_channels
+
+      - name: Debug port channel cdp neighbors
+        debug:
+          var: port_channel_cdp_neighbors
+
+
       when: inventory_hostname in ports

@@ -21,6 +21,6 @@
      - name: Read in parse_genie role
        include_role:
          name: clay584.parse_genie
-     - name: Debug Genie Filter
+     - name: Debug show running interface
        debug:
          msg: "{{ contents | parse_genie(command='show running-config interface', os='nxos') }}"
