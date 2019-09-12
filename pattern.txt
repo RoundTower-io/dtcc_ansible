@@ -306,3 +306,34 @@ interface Ethernet1/2
 
 JER-LAB-N95KSW1#
 
+
+
+
+
+
+
+-LAB-N95KSW1# show vlan name tennis_404 | i Po[1-9]+
+404  tennis_404                       active    Po1, Po11, Po12, Po21, Eth1/1
+
+JER-LAB-N95KSW1# show cdp neigh  interface po1
+Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+                  S - Switch, H - Host, I - IGMP, r - Repeater,
+                  V - VoIP-Phone, D - Remotely-Managed-Device,
+                  s - Supports-STP-Dispute
+
+Device-ID          Local Intrfce  Hldtme Capability  Platform      Port ID
+JER-LAB-95KSW2.jer.lab.local(FGE18410JP1)
+                    Eth1/1         136    R S I s   N9K-C9508     Eth1/1
+JER-LAB-95KSW2.jer.lab.local(FGE18410JP1)
+                    Eth1/2         136    R S I s   N9K-C9508     Eth1/2
+
+Total entries displayed: 2
+
+
+
+JER-LAB-N95KSW1# show cdp neigh  interface po1 | i 95KSW3
+JER-LAB-N95KSW1# show cdp neigh  interface po1 | i 95KSW2
+JER-LAB-95KSW2.jer.lab.local(FGE18410JP1)
+JER-LAB-95KSW2.jer.lab.local(FGE18410JP1)
+JER-LAB-N95KSW1#
+
