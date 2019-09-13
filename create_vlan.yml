@@ -71,7 +71,7 @@
 
       - name: Read in parse_genie role
         include_role:
-            name: clay584.parse_genie
+            name: parse_genie
 
       - name: Save show vlan parsed output
         set_fact:
@@ -101,7 +101,7 @@
         nxos_command:
             commands: show cdp neighbors int {{ item }}
         register: port_channel_cdp_neighbors
-        loop: " {{ port_channels }}"
+        loop: "{{ port_channels }}"
 
       - name: Debug port channel cdp neighbors
         debug:
