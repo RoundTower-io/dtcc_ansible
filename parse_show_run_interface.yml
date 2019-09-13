@@ -1,26 +1,46 @@
-- hosts: localhost
+---
+- name: try parsing show run interface
+  hosts: localhost
   gather_facts: no
   vars:
      contents: |
-        !Command: show running-config interface Ethernet1/1
-        !Running configuration last done at: Sun Aug 18 23:22:42 2019
-        !Time: Tue Sep  3 23:25:59 2019
+       !Command: show running-config interface port-channel1
+       !Running configuration last done at: Wed Sep  4 01:07:06 2019
+       !Time: Sun Sep  8 06:35:02 2019
 
-        version 7.0(3)I7(6) Bios:version 08.35
+       version 7.0(3)I7(6) Bios:version 08.35
 
-        interface Ethernet1/1
-          description *** VPC PEER LINK PO1 to JER-LAB-N95KSW2 1/1-2 ***
-          switchport
-          switchport mode trunk
-          switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
-          channel-group 1 mode active
-          no shutdown
+       interface port-channel1
+         switchport
+         switchport mode trunk
+         switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
+         spanning-tree port type network
+         vpc peer-link
+
+  roles:
+    - clay584.parse_genie
 
   tasks:
      - debug: msg="the value of contents is {{ contents }}"
-     - name: Read in parse_genie role
-       include_role:
-         name: clay584.parse_genie
+
+     - name: Debug Genie Filter
+       set_fact:
+         channel: "{{ contents | parse_genie(command='show running-config interface port-channel1', os='nxos') }}"
+
      - name: Debug show running interface
        debug:
-         msg: "{{ contents | parse_genie(command='show running-config interface', os='nxos') }}"
+         var: channel
+
+     - name: Set vlan ports
+       set_fact:
+         vlan_ports: "{{ channel['interface']['port-channel1']['trunk_vlans'] }}"
+
+     - name: Debug vlan ports
+       debug:
+         var: vlan_ports
+
+     - name: Determine if VLAN in port range
+       set_fact:
+         vlan_present: "{{ vlan_ports |  vlan_in_range(vlan_number) }}"
+
+
