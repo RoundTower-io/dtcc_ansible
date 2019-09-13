@@ -43,4 +43,13 @@
        set_fact:
          vlan_present: "{{ vlan_ports |  vlan_in_range(vlan_number) }}"
 
+     - name: Debug vlan IS present
+       debug:
+         msg: "vlan IS present"
+       when: vlan_present
+
+     - name: Debug vlan NOT present
+       debug:
+         msg: "vlan NOT present"
+       when: not vlan_present
 
