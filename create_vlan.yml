@@ -80,7 +80,7 @@
 
       - name: Save show vlan parsed output
         set_fact:
-           show_vlan_parsed_output: "{{ show_vlan_contents['stdout'] | parse_genie(command='show vlan', os='nxos') }}"
+           show_vlan_parsed_output: "{{ show_vlan_contents['stdout'][0] | parse_genie(command='show vlan', os='nxos') }}"
 
       - name: show parsed_output from show vlan
         debug:
@@ -88,7 +88,7 @@
 
       - name: Set the vlan_interfaces fact
         set_fact:
-          vlan_interfaces: "{{ show_vlan_parsed_output['vlans'][vlan|string]['interfaces'] }}"
+          vlan_interfaces: "{{ show_vlan_parsed_output['vlans'][vlan_number|string]['interfaces'] }}"
 
       - name: Show vlan_interfaces fact
         debug:
