@@ -15,23 +15,6 @@
     - name: Remove a VLAN
       block:
 
-      - name: Audit ports used
-        nxos_command:
-            commands: show vlan
-        register: show_vlan_contents
-
-      - name: Read in parse_genie role
-        include_role:
-            name: parse_genie
-
-      - name: debug vlan output
-        debug:
-          var: show_vlan_contents 
-
-      - name: Save show vlan parsed output
-        set_fact:
-           show_vlan_parsed_output: "{{ show_vlan_contents['stdout'] | parse_genie(command='show vlan', os='nxos') }}"
-
       - name: Ensure Eth interfaces are not attached to a VLAN
         nxos_l2_interface:
           name: "{{item}}"
