@@ -32,8 +32,34 @@
         set_fact:
            show_vlan_parsed_output: "{{ show_vlan_contents['stdout'][0] | parse_genie(command='show vlan', os='nxos') }}"
 
-      - name: debug vlan output
+      - name: show parsed_output from show vlan
         debug:
-          var: show_vlan_parsed_output 
+          var: show_vlan_parsed_output
+
+      - name: Set the vlan_interfaces fact
+        set_fact:
+          vlan_interfaces: "{{ show_vlan_parsed_output['vlans'][vlan_number|string]['interfaces'] }}"
+
+      - name: Show vlan_interfaces fact
+        debug:
+          var: vlan_interfaces
+
+      - name: Get trunk candidate interfaces
+        set_fact:
+           port_channels: "{{ vlan_interfaces | port_channels }}"
+
+      - name: Debug port channels
+        debug:
+          var: port_channels
+
+      - name: show cdp neighbors for port channels
+        nxos_command:
+            commands: show cdp neighbors int {{ item }}
+        register: port_channel_cdp_neighbors
+        loop: "{{ port_channels }}"
+
+      - name: Debug port channel cdp neighbors
+        debug:
+          var: port_channel_cdp_neighbors
 
       when: inventory_hostname in interfaces
