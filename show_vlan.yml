@@ -12,7 +12,7 @@
     ansible_python_interpreter: /usr/local/bin/python3
 
   tasks:
-    - name: Remove a VLAN
+    - name: Show a VLAN
       block:
 
       - name: Audit ports used
@@ -30,17 +30,10 @@
 
       - name: Save show vlan parsed output
         set_fact:
-           show_vlan_parsed_output: "{{ show_vlan_contents['stdout'] | parse_genie(command='show vlan', os='nxos') }}"
+           show_vlan_parsed_output: "{{ show_vlan_contents['stdout'][0] | parse_genie(command='show vlan', os='nxos') }}"
 
-      - name: Ensure Eth interfaces are not attached to a VLAN
-        nxos_l2_interface:
-          name: "{{item}}"
-          state: unconfigured
-        loop: "{{ interfaces[inventory_hostname] }}"
-
-      - name: Delete a VLAN
-        nxos_vlan:
-          vlan_id: "{{ vlan_number }}"
-          state: absent
+      - name: debug vlan output
+        debug:
+          var: show_vlan_parsed_output 
 
       when: inventory_hostname in interfaces

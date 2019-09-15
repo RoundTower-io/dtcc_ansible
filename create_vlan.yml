@@ -12,6 +12,7 @@
   tasks:
     - name: Build a VLAN
       block:
+
       - name: Audit ports used
         nxos_command:
           commands: show run int {{ item }}
@@ -73,9 +74,13 @@
         include_role:
             name: parse_genie
 
+      - name: debug vlan output
+        debug:
+          var: show_vlan_contents 
+
       - name: Save show vlan parsed output
         set_fact:
-           show_vlan_parsed_output: "{{ show_vlan_contents | parse_genie(command='show vlan', os='nxos') }}"
+           show_vlan_parsed_output: "{{ show_vlan_contents['stdout'] | parse_genie(command='show vlan', os='nxos') }}"
 
       - name: show parsed_output from show vlan
         debug:
