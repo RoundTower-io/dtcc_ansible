@@ -23,6 +23,6 @@ class FilterModule(object):
         :return: the filter-to-function association
         """
         return {
-            'neighbor_ports': find_port_channels,
+            'active_port_channels': find_port_channels,
         }
 
