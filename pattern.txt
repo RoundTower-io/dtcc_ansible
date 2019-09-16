@@ -337,3 +337,163 @@ JER-LAB-95KSW2.jer.lab.local(FGE18410JP1)
 JER-LAB-95KSW2.jer.lab.local(FGE18410JP1)
 JER-LAB-N95KSW1#
 
+
+ok: [n95ksw1] => {
+    "port_channel_cdp_neighbors": {
+        "changed": false,
+        "msg": "All items completed",
+        "results": [
+            {
+                "ansible_loop_var": "item",
+                "changed": false,
+                "failed": false,
+                "invocation": {
+                    "module_args": {
+                        "auth_pass": null,
+                        "authorize": null,
+                        "commands": [
+                            "show cdp neighbors int Port-channel1"
+                        ],
+                        "host": null,
+                        "interval": 1,
+                        "match": "all",
+                        "password": null,
+                        "port": null,
+                        "provider": null,
+                        "retries": 10,
+                        "ssh_keyfile": null,
+                        "timeout": null,
+                        "transport": null,
+                        "use_ssl": null,
+                        "username": null,
+                        "validate_certs": null,
+                        "wait_for": null
+                    }
+                },
+                "item": "Port-channel1",
+                "stdout": [
+                    "Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge\n                  S - Switch, H - Host, I - IGMP, r - Repeater,\n                  V - VoIP-Phone, D - Remotely-Managed-Device,\n                  s - Supports-STP-Dispute\n\nDevice-ID          Local Intrfce  Hldtme Capability  Platform      Port ID\nJER-LAB-95KSW2.jer.lab.local(FGE18410JP1)\n                    Eth1/1         134    R S I s   N9K-C9508     Eth1/1        \nJER-LAB-95KSW2.jer.lab.local(FGE18410JP1)\n                    Eth1/2         134    R S I s   N9K-C9508     Eth1/2        \n\nTotal entries displayed: 2"
+                ],
+                "stdout_lines": [
+                    [
+                        "Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge",
+                        "                  S - Switch, H - Host, I - IGMP, r - Repeater,",
+                        "                  V - VoIP-Phone, D - Remotely-Managed-Device,",
+                        "                  s - Supports-STP-Dispute",
+                        "",
+                        "Device-ID          Local Intrfce  Hldtme Capability  Platform      Port ID",
+                        "JER-LAB-95KSW2.jer.lab.local(FGE18410JP1)",
+                        "                    Eth1/1         134    R S I s   N9K-C9508     Eth1/1        ",
+                        "JER-LAB-95KSW2.jer.lab.local(FGE18410JP1)",
+                        "                    Eth1/2         134    R S I s   N9K-C9508     Eth1/2        ",
+                        "",
+                        "Total entries displayed: 2"
+                    ]
+                ]
+            }
+        ]
+    }
+}
+ok: [n95ksw2] => {
+    "port_channel_cdp_neighbors": {
+        "changed": false,
+        "msg": "All items completed",
+        "results": [
+            {
+                "ansible_loop_var": "item",
+                "changed": false,
+                "failed": false,
+                "invocation": {
+                    "module_args": {
+                        "auth_pass": null,
+                        "authorize": null,
+                        "commands": [
+                            "show cdp neighbors int Port-channel1"
+                        ],
+                        "host": null,
+                        "interval": 1,
+                        "match": "all",
+                        "password": null,
+                        "port": null,
+                        "provider": null,
+                        "retries": 10,
+                        "ssh_keyfile": null,
+                        "timeout": null,
+                        "transport": null,
+                        "use_ssl": null,
+                        "username": null,
+                        "validate_certs": null,
+                        "wait_for": null
+                    }
+                },
+                "item": "Port-channel1",
+                "stdout": [
+                    "Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge\n                  S - Switch, H - Host, I - IGMP, r - Repeater,\n                  V - VoIP-Phone, D - Remotely-Managed-Device,\n                  s - Supports-STP-Dispute\n\nDevice-ID          Local Intrfce  Hldtme Capability  Platform      Port ID\nJER-LAB-N95KSW1.jer.lab.local(FGE19040SJE)\n                    Eth1/1         134    R S I s   N9K-C9508     Eth1/1        \nJER-LAB-N95KSW1.jer.lab.local(FGE19040SJE)\n                    Eth1/2         134    R S I s   N9K-C9508     Eth1/2        \n\nTotal entries displayed: 2"
+                ],
+                "stdout_lines": [
+                    [
+                        "Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge",
+                        "                  S - Switch, H - Host, I - IGMP, r - Repeater,",
+                        "                  V - VoIP-Phone, D - Remotely-Managed-Device,",
+                        "                  s - Supports-STP-Dispute",
+                        "",
+                        "Device-ID          Local Intrfce  Hldtme Capability  Platform      Port ID",
+                        "JER-LAB-N95KSW1.jer.lab.local(FGE19040SJE)",
+                        "                    Eth1/1         134    R S I s   N9K-C9508     Eth1/1        ",
+                        "JER-LAB-N95KSW1.jer.lab.local(FGE19040SJE)",
+                        "                    Eth1/2         134    R S I s   N9K-C9508     Eth1/2        ",
+                        "",
+                        "Total entries displayed: 2"
+                    ]
+                ]
+            },
+            {
+                "ansible_loop_var": "item",
+                "changed": false,
+                "failed": false,
+                "invocation": {
+                    "module_args": {
+                        "auth_pass": null,
+                        "authorize": null,
+                        "commands": [
+                            "show cdp neighbors int Port-channel11"
+                        ],
+                        "host": null,
+                        "interval": 1,
+                        "match": "all",
+                        "password": null,
+                        "port": null,
+                        "provider": null,
+                        "retries": 10,
+                        "ssh_keyfile": null,
+                        "timeout": null,
+                        "transport": null,
+                        "use_ssl": null,
+                        "username": null,
+                        "validate_certs": null,
+                        "wait_for": null
+                    }
+                },
+                "item": "Port-channel11",
+                "stdout": [
+                    "Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge\n                  S - Switch, H - Host, I - IGMP, r - Repeater,\n                  V - VoIP-Phone, D - Remotely-Managed-Device,\n                  s - Supports-STP-Dispute\n\nDevice-ID          Local Intrfce  Hldtme Capability  Platform      Port ID\nJER-LAB-N93KSW1(SAL1816QV7Q)\n                    Eth1/43        131    R S I s   N9K-C9396PX   Eth1/18       \n\nTotal entries displayed: 1"
+                ],
+                "stdout_lines": [
+                    [
+                        "Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge",
+                        "                  S - Switch, H - Host, I - IGMP, r - Repeater,",
+                        "                  V - VoIP-Phone, D - Remotely-Managed-Device,",
+                        "                  s - Supports-STP-Dispute",
+                        "",
+                        "Device-ID          Local Intrfce  Hldtme Capability  Platform      Port ID",
+                        "JER-LAB-N93KSW1(SAL1816QV7Q)",
+                        "                    Eth1/43        131    R S I s   N9K-C9396PX   Eth1/18       ",
+                        "",
+                        "Total entries displayed: 1"
+                    ]
+                ]
+            }
+        ]
+    }
+}
+
