@@ -20,6 +20,11 @@
             commands: show vlan
         register: show_vlan_contents
 
+      - name: show port channel summary 
+        nxos_command:
+            commands: show port-channel summary
+        register: show_port_channel_summary
+
       - name: Read in parse_genie role
         include_role:
             name: parse_genie
@@ -28,13 +33,25 @@
         debug:
           var: show_vlan_contents 
 
+      - name: debug port channel summary 
+        debug:
+          var: show_port_channel_summary
+
       - name: Save show vlan parsed output
         set_fact:
            show_vlan_parsed_output: "{{ show_vlan_contents['stdout'][0] | parse_genie(command='show vlan', os='nxos') }}"
 
+      - name: Save show port channel summary 
+        set_fact:
+           show_port_channel_summary_output: "{{ show_port_channel_summary['stdout'][0] | parse_genie(command='show port-channel summary', os='nxos') }}"
+
       - name: show parsed_output from show vlan
         debug:
           var: show_vlan_parsed_output
+
+      - name: show port channel summary output 
+        debug:
+          var: show_port_channel_summary_output 
 
       - name: Set the vlan_interfaces fact
         set_fact:
@@ -51,6 +68,10 @@
       - name: Debug port channels
         debug:
           var: port_channels
+
+      - name: Get ACTIVE port channels 
+        set_fact:
+           active_port_channels: "{{ show_port_channel_summary_output | active_port_channels(port_channels) }}"
 
       - name: show cdp neighbors for port channels
         nxos_command:
