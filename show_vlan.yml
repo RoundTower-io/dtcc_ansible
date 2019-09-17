@@ -15,6 +15,10 @@
     - name: Show a VLAN
       block:
 
+      - name: Set names of hosts we connect to
+        set_fact:
+           to_hosts: "{{interfaces | flatten | difference(inventory_hostname)}}"
+
       - name: Audit ports used
         nxos_command:
             commands: show vlan
@@ -82,5 +86,9 @@
       - name: Debug port channel cdp neighbors
         debug:
           var: port_channel_cdp_neighbors
+
+      - name: Find port for neighbor
+        set_fact:
+           neighbor_ports: "{{ port_channel_cdp_neighbors | get_neighbor_port_channels(to_hosts) }}"
 
       when: inventory_hostname in interfaces
