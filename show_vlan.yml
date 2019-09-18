@@ -8,116 +8,133 @@
   any_errors_fatal: true
   connection: local
   gather_facts: no
-  vars: 
+  vars:
     ansible_python_interpreter: /usr/local/bin/python3
 
   tasks:
     - name: Show a VLAN
       block:
 
-      - name: Set names of hosts we connect to
-        set_fact:
-           to_hosts: "{{interfaces | flatten | difference(inventory_hostname)}}"
+        - name: Set names of hosts we connect to
+          set_fact:
+            to_hosts: "{{interfaces | flatten | difference(inventory_hostname)}}"
 
-      - name: debug to_hosts 
-        debug:
-          var: to_hosts 
+        - name: debug to_hosts
+          debug:
+            var: to_hosts
 
-      - name: Audit ports used
-        nxos_command:
+        - name: Audit ports used
+          nxos_command:
             commands: show vlan
-        register: show_vlan_contents
+          register: show_vlan_contents
 
-      - name: show port channel summary 
-        nxos_command:
+        - name: show port channel summary
+          nxos_command:
             commands: show port-channel summary
-        register: show_port_channel_summary
+          register: show_port_channel_summary
 
-      - name: Read in parse_genie role
-        include_role:
+        - name: Read in parse_genie role
+          include_role:
             name: parse_genie
 
-      - name: debug vlan output
-        debug:
-          var: show_vlan_contents 
+        - name: debug vlan output
+          debug:
+            var: show_vlan_contents
 
-      - name: debug port channel summary 
-        debug:
-          var: show_port_channel_summary
+        - name: debug port channel summary
+          debug:
+            var: show_port_channel_summary
 
-      - name: Save show vlan parsed output
-        set_fact:
-           show_vlan_parsed_output: "{{ show_vlan_contents['stdout'][0] | parse_genie(command='show vlan', os='nxos') }}"
+        - name: Save show vlan parsed output
+          set_fact:
+            show_vlan_parsed_output: "{{ show_vlan_contents['stdout'][0] | parse_genie(command='show vlan', os='nxos') }}"
 
-      - name: Save show port channel summary 
-        set_fact:
-           show_port_channel_summary_output: "{{ show_port_channel_summary['stdout'][0] | parse_genie(command='show port-channel summary', os='nxos') }}"
+        - name: Save show port channel summary
+          set_fact:
+            show_port_channel_summary_output: "{{ show_port_channel_summary['stdout'][0] | parse_genie(command='show port-channel summary', os='nxos') }}"
 
-      - name: show parsed_output from show vlan
-        debug:
-          var: show_vlan_parsed_output
+        - name: show parsed_output from show vlan
+          debug:
+            var: show_vlan_parsed_output
 
-      - name: show port channel summary output 
-        debug:
-          var: show_port_channel_summary_output 
+        - name: show port channel summary output
+          debug:
+            var: show_port_channel_summary_output
 
-      - name: Set the vlan_interfaces fact
-        set_fact:
-          vlan_interfaces: "{{ show_vlan_parsed_output['vlans'][vlan_number|string]['interfaces'] }}"
+        - name: Set the vlan_interfaces fact
+          set_fact:
+            vlan_interfaces: "{{ show_vlan_parsed_output['vlans'][vlan_number|string]['interfaces'] }}"
 
-      - name: Show vlan_interfaces fact
-        debug:
-          var: vlan_interfaces
+        - name: Show vlan_interfaces fact
+          debug:
+            var: vlan_interfaces
 
-      - name: Get trunk candidate interfaces
-        set_fact:
-           port_channels: "{{ vlan_interfaces | port_channels }}"
+        - name: Get trunk candidate interfaces
+          set_fact:
+            port_channels: "{{ vlan_interfaces | port_channels }}"
 
-      - name: Debug port channels
-        debug:
-          var: port_channels
+        - name: Debug port channels
+          debug:
+            var: port_channels
 
-      - name: Get ACTIVE port channels 
-        set_fact:
-           active_port_channels: "{{ show_port_channel_summary_output | active_port_channels(port_channels) }}"
+        - name: Get ACTIVE port channels
+          set_fact:
+            active_port_channels: "{{ show_port_channel_summary_output | active_port_channels(port_channels) }}"
 
-      - name: show cdp neighbors for port channels
-        nxos_command:
+        - name: show cdp neighbors for port channels
+          nxos_command:
             commands: show cdp neighbors int {{ item }}
-        register: port_channel_cdp_neighbors
-        loop: "{{ active_port_channels }}"
+          register: port_channel_cdp_neighbors
+          loop: "{{ active_port_channels }}"
 
-      - name: Debug port channel cdp neighbors
-        debug:
-          var: port_channel_cdp_neighbors
+        - name: Debug port channel cdp neighbors
+          debug:
+            var: port_channel_cdp_neighbors
 
-      - name: Find port for neighbor
-        set_fact:
-           neighbor_ports: "{{ port_channel_cdp_neighbors | get_neighbor_port_channels(to_hosts) }}"
+        - name: Find port for neighbor
+          set_fact:
+            neighbor_ports: "{{ port_channel_cdp_neighbors | get_neighbor_port_channels(to_hosts) }}"
 
-      - name: debug neighbor ports
-        debug:
-          var: neighbor_ports
+        - name: debug neighbor ports
+          debug:
+            var: neighbor_ports
 
+        - name: Debug Genie Filter
+          set_fact:
+            channel: "{{ contents | parse_genie(command='show running-config interface {{ item }}', os='nxos') }}"
+          with_items:
+            - neighbor_ports
 
+        - name: Debug show running interface
+          debug:
+            var: channel
 
+        - name: Set vlan ports
+          set_fact:
+            vlan_ports: "{{ channel['interface'][{{ item }}]['trunk_vlans'] }}"
+          with_items:
+            - neighbor_ports
 
-      - name: Determine if VLAN in port range
-        set_fact:
-          vlan_present: "{{ neighbor_ports | vlan_in_range(vlan_number) }}"
+        - name: Debug vlan ports
+          debug:
+            var: vlan_ports
 
-      - name: Debug vlan_present
-        debug:
-          msg: vlan_present
+        - name: Determine if VLAN in port range
+          set_fact:
+            vlan_present: "{{ vlan_ports | vlan_in_range(vlan_number) }}"
 
-      - name: Debug vlan IS present
-        debug:
-          msg: "vlan IN range"
-        when: vlan_present
+        - name: Debug vlan_present
+          debug:
+            msg: vlan_present
 
-      - name: Debug vlan NOT present
-        debug:
-          msg: "vlan NOT in range"
-        when: not vlan_present
+        - name: Debug vlan IS present
+          debug:
+            msg: "vlan IN range"
+          when: vlan_present
 
-      when: inventory_hostname in interfaces
+        - name: Debug vlan NOT present
+          debug:
+            msg: "vlan NOT in range"
+          when: not vlan_present
+
+    when: inventory_hostname in interfaces
