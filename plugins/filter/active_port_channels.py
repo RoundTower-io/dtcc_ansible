@@ -9,9 +9,9 @@ def find_port_channels(summary, interfaces):
     """
     active = []
     for interface in interfaces:
-        print(interface)
+        #print(interface)
         if summary["interfaces"][interface]["oper_status"] == "up":
-            print("appending " + interface)
+            #print("appending " + interface)
             active.append(interface)
     return active
 
