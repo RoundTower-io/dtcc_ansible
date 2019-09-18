@@ -19,6 +19,10 @@
         set_fact:
            to_hosts: "{{interfaces | flatten | difference(inventory_hostname)}}"
 
+      - name: debug to_hosts 
+        debug:
+          var: to_hosts 
+
       - name: Audit ports used
         nxos_command:
             commands: show vlan
@@ -95,10 +99,12 @@
         debug:
           var: neighbor_ports
 
+
+
+
       - name: Determine if VLAN in port range
         set_fact:
-          vlan_present: "{{ neighbor_ports |  vlan_in_range(vlan_number) }}"
-        loop: "{{ neighbor_ports }}"
+          vlan_present: "{{ neighbor_ports | vlan_in_range(vlan_number) }}"
 
       - name: Debug vlan_present
         debug:
