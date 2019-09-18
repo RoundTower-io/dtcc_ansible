@@ -115,7 +115,7 @@
 
         - name: Parse show run interface contents  
           set_fact:
-            channel: "{{ show_interface_contents['results'][0]['stdout'][0] | parse_genie(command='show running-config interface {{ item }}', os='nxos') }}"
+            channel: "{{ show_interface_contents['results'][0]['stdout'][0] | parse_genie(command='show running-config interface item', os='nxos') }}"
           with_items:
             - "{{ neighbor_ports }}"
 
@@ -151,7 +151,7 @@
 
         - name: Debug vlan_present
           debug:
-            msg: vlan_present
+            msg: "{{ vlan_present }}"
 
         - name: Debug vlan IS present
           debug:
