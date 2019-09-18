@@ -51,16 +51,6 @@
           state: present
           interfaces: "{{ interfaces[inventory_hostname] }}"
 
-#      - name: Check VLAN Trunks
-#        include_role:
-#          name: verify-trunk
-#        vars:
-#          vlan: "{{ vlan_number }}"
-#          # Get host names only, then pass only hosts which are NOT the current one
-#          to_hosts: "{{interfaces | flatten | difference(inventory_hostname)}}"
-#          from_host: inventory_hostname
-#          interfaces: "{{ interfaces[inventory_hostname] }}"
-
       - name: Set names of hosts we connect to
         set_fact:
            to_hosts: "{{interfaces | flatten | difference(inventory_hostname)}}"
@@ -76,7 +66,7 @@
 
       - name: debug vlan output
         debug:
-          var: show_vlan_contents 
+          var: show_vlan_contents
 
       - name: Save show vlan parsed output
         set_fact:
@@ -111,5 +101,88 @@
       - name: Debug port channel cdp neighbors
         debug:
           var: port_channel_cdp_neighbors
+#
+#
+#
+      - name: Set names of hosts we connect to
+        set_fact:
+          to_hosts: "{{interfaces | flatten | difference(inventory_hostname)}}"
 
+      - name: Audit ports used
+        nxos_command:
+          commands: show vlan
+        register: show_vlan_contents
+
+      - name: show port channel summary
+        nxos_command:
+          commands: show port-channel summary
+        register: show_port_channel_summary
+
+      - name: Read in parse_genie role
+        include_role:
+          name: parse_genie
+
+      - name: Save show vlan parsed output
+        set_fact:
+          show_vlan_parsed_output: "{{ show_vlan_contents['stdout'][0] | parse_genie(command='show vlan', os='nxos') }}"
+
+      - name: Save show port channel summary
+        set_fact:
+          show_port_channel_summary_output: "{{ show_port_channel_summary['stdout'][0] | parse_genie(command='show port-channel summary', os='nxos') }}"
+
+      - name: Set the vlan_interfaces fact
+        set_fact:
+          vlan_interfaces: "{{ show_vlan_parsed_output['vlans'][vlan_number|string]['interfaces'] }}"
+
+      - name: Get trunk candidate interfaces
+        set_fact:
+          port_channels: "{{ vlan_interfaces | port_channels }}"
+
+      - name: Get ACTIVE port channels
+        set_fact:
+          active_port_channels: "{{ show_port_channel_summary_output | active_port_channels(port_channels) }}"
+
+      - name: show cdp neighbors for port channels
+        nxos_command:
+          commands: show cdp neighbors int {{ item }}
+        register: port_channel_cdp_neighbors
+        loop: "{{ active_port_channels }}"
+
+      - name: Find port for neighbor
+        set_fact:
+          neighbor_ports: "{{ port_channel_cdp_neighbors | get_neighbor_port_channels(to_hosts) }}"
+
+      - name: Audit ports used
+        nxos_command:
+          commands: show running-config interface {{ item }}
+        register: show_interface_contents
+        with_items:
+          - "{{ neighbor_ports }}"
+
+      - name: Parse show run interface contents
+        set_fact:
+          channel: "{{ show_interface_contents['results'][0]['stdout'][0] | parse_genie(command='show running-config interface item', os='nxos') }}"
+        with_items:
+          - "{{ neighbor_ports }}"
+
+      - name: Set vlan ports
+        set_fact:
+          vlan_ports: "{{ channel['interface'][item | lower | string]['trunk_vlans'] }}"
+        with_items:
+          - "{{ neighbor_ports }}"
+
+      - name: Determine if VLAN in port range
+        set_fact:
+          vlan_present: "{{ vlan_ports | vlan_in_range(vlan_number) }}"
+
+      - name: Debug vlan IS present
+        debug:
+          msg: "vlan IN range"
+        when: vlan_present
+
+      - name: Debug vlan NOT present
+        debug:
+          msg: "vlan NOT in range"
+        when: not vlan_present
       when: inventory_hostname in interfaces
+
