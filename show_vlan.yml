@@ -91,4 +91,27 @@
         set_fact:
            neighbor_ports: "{{ port_channel_cdp_neighbors | get_neighbor_port_channels(to_hosts) }}"
 
+      - name: debug neighbor ports
+        debug:
+          var: neighbor_ports
+
+      - name: Determine if VLAN in port range
+        set_fact:
+          vlan_present: "{{ neighbor_ports |  vlan_in_range(vlan_number) }}"
+        loop: "{{ neighbor_ports }}"
+
+      - name: Debug vlan_present
+        debug:
+          msg: vlan_present
+
+      - name: Debug vlan IS present
+        debug:
+          msg: "vlan IN range"
+        when: vlan_present
+
+      - name: Debug vlan NOT present
+        debug:
+          msg: "vlan NOT in range"
+        when: not vlan_present
+
       when: inventory_hostname in interfaces

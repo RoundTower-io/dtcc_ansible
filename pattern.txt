@@ -340,34 +340,34 @@ JER-LAB-N95KSW1#
 
 ok: [n95ksw1] => {
     "port_channel_cdp_neighbors": {
-        "changed": false,
+        "changed": "false",
         "msg": "All items completed",
         "results": [
             {
                 "ansible_loop_var": "item",
-                "changed": false,
-                "failed": false,
+                "changed": "false",
+                "failed": "false",
                 "invocation": {
                     "module_args": {
-                        "auth_pass": null,
-                        "authorize": null,
+                        "auth_pass": "Null",
+                        "authorize": "Null",
                         "commands": [
                             "show cdp neighbors int Port-channel1"
                         ],
-                        "host": null,
+                        "host": "Null",
                         "interval": 1,
                         "match": "all",
-                        "password": null,
-                        "port": null,
-                        "provider": null,
+                        "password": "Null",
+                        "port": "Null",
+                        "provider": "Null",
                         "retries": 10,
-                        "ssh_keyfile": null,
-                        "timeout": null,
-                        "transport": null,
-                        "use_ssl": null,
-                        "username": null,
-                        "validate_certs": null,
-                        "wait_for": null
+                        "ssh_keyfile": "Null",
+                        "timeout": "Null",
+                        "transport": "Null",
+                        "use_ssl": "Null",
+                        "username": "Null",
+                        "validate_certs": "Null",
+                        "wait_for": "Null"
                     }
                 },
                 "item": "Port-channel1",
@@ -396,34 +396,34 @@ ok: [n95ksw1] => {
 }
 ok: [n95ksw2] => {
     "port_channel_cdp_neighbors": {
-        "changed": false,
+        "changed": "false",
         "msg": "All items completed",
         "results": [
             {
                 "ansible_loop_var": "item",
-                "changed": false,
-                "failed": false,
+                "changed": "false",
+                "failed": "false",
                 "invocation": {
                     "module_args": {
-                        "auth_pass": null,
-                        "authorize": null,
+                        "auth_pass": "Null",
+                        "authorize": "Null",
                         "commands": [
                             "show cdp neighbors int Port-channel1"
                         ],
-                        "host": null,
+                        "host": "Null",
                         "interval": 1,
                         "match": "all",
-                        "password": null,
-                        "port": null,
-                        "provider": null,
+                        "password": "Null",
+                        "port": "Null",
+                        "provider": "Null",
                         "retries": 10,
-                        "ssh_keyfile": null,
-                        "timeout": null,
-                        "transport": null,
-                        "use_ssl": null,
-                        "username": null,
-                        "validate_certs": null,
-                        "wait_for": null
+                        "ssh_keyfile": "Null",
+                        "timeout": "Null",
+                        "transport": "Null",
+                        "use_ssl": "Null",
+                        "username": "Null",
+                        "validate_certs": "Null",
+                        "wait_for": "Null"
                     }
                 },
                 "item": "Port-channel1",
@@ -449,29 +449,29 @@ ok: [n95ksw2] => {
             },
             {
                 "ansible_loop_var": "item",
-                "changed": false,
-                "failed": false,
+                "changed": "false",
+                "failed": "false",
                 "invocation": {
                     "module_args": {
-                        "auth_pass": null,
-                        "authorize": null,
+                        "auth_pass": "Null",
+                        "authorize": "Null",
                         "commands": [
                             "show cdp neighbors int Port-channel11"
                         ],
-                        "host": null,
+                        "host": "Null",
                         "interval": 1,
                         "match": "all",
-                        "password": null,
-                        "port": null,
-                        "provider": null,
+                        "password": "Null",
+                        "port": "Null",
+                        "provider": "Null",
                         "retries": 10,
-                        "ssh_keyfile": null,
-                        "timeout": null,
-                        "transport": null,
-                        "use_ssl": null,
-                        "username": null,
-                        "validate_certs": null,
-                        "wait_for": null
+                        "ssh_keyfile": "Null",
+                        "timeout": "Null",
+                        "transport": "Null",
+                        "use_ssl": "Null",
+                        "username": "Null",
+                        "validate_certs": "Null",
+                        "wait_for": "Null"
                     }
                 },
                 "item": "Port-channel11",
