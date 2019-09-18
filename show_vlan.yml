@@ -98,9 +98,17 @@
           debug:
             var: neighbor_ports
 
+        - name: Audit ports used
+          nxos_command:
+            commands: show running-config interface {{ item }}
+          register: show_interface_contents
+          with_items:
+            - neighbor_ports
+
+
         - name: Debug Genie Filter
           set_fact:
-            channel: "{{ contents | parse_genie(command='show running-config interface {{ item }}', os='nxos') }}"
+            channel: "{{ show_interface_contents | parse_genie(command='show running-config interface {{ item }}', os='nxos') }}"
           with_items:
             - neighbor_ports
 
