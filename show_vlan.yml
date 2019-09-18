@@ -135,4 +135,4 @@
           debug:
             msg: "vlan NOT in range"
           when: not vlan_present
-    when: inventory_hostname in interfaces
+      when: inventory_hostname in interfaces
