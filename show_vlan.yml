@@ -94,9 +94,9 @@
           set_fact:
             neighbor_ports: "{{ port_channel_cdp_neighbors | get_neighbor_port_channels(to_hosts) }}"
 
-        - name: debug neighbor ports
-          debug:
-            var: neighbor_ports
+#        - name: debug neighbor ports
+#          debug:
+#            var: neighbor_ports
 
         - name: Audit ports used
           nxos_command:
@@ -105,13 +105,13 @@
           with_items:
             - "{{ neighbor_ports }}"
 
-        - name: debug show running config interface 
-          debug:
-            var: show_interface_contents 
-
-        - name: debug show specific content 
-          debug:
-            msg: "{{ show_interface_contents['results'][0]['stdout'][0] }}" 
+#        - name: debug show running config interface
+#          debug:
+#            var: show_interface_contents
+#
+#        - name: debug show specific content
+#          debug:
+#            msg: "{{ show_interface_contents['results'][0]['stdout'][0] }}"
 
         - name: Parse show run interface contents  
           set_fact:
@@ -119,21 +119,21 @@
           with_items:
             - "{{ neighbor_ports }}"
 
-        - name: Debug show running interface
-          debug:
-            var: channel
+#        - name: Debug show running interface
+#          debug:
+#            var: channel
 
-        - name: debug neighbor ports loop
-          debug:
-            msg: "{{ item  }}"
-          with_items:
-            - "{{ neighbor_ports }}"
+#        - name: debug neighbor ports loop
+#          debug:
+#            msg: "{{ item  }}"
+#          with_items:
+#            - "{{ neighbor_ports }}"
 
-        - name: debug show channel content 
-          debug:
-            msg: "{{ channel['interface'][item | lower | string] }}" 
-          with_items:
-            - "{{ neighbor_ports }}"
+#        - name: debug show channel content
+#          debug:
+#            msg: "{{ channel['interface'][item | lower | string] }}"
+#          with_items:
+#            - "{{ neighbor_ports }}"
 
         - name: Set vlan ports
           set_fact:
@@ -141,17 +141,17 @@
           with_items:
             - "{{ neighbor_ports }}"
 
-        - name: Debug vlan ports
-          debug:
-            var: vlan_ports
+#        - name: Debug vlan ports
+#          debug:
+#            var: vlan_ports
 
         - name: Determine if VLAN in port range
           set_fact:
             vlan_present: "{{ vlan_ports | vlan_in_range(vlan_number) }}"
 
-        - name: Debug vlan_present
-          debug:
-            msg: "{{ vlan_present }}"
+#        - name: Debug vlan_present
+#          debug:
+#            msg: "{{ vlan_present }}"
 
         - name: Debug vlan IS present
           debug:
