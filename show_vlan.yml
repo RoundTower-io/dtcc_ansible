@@ -14,7 +14,6 @@
   tasks:
     - name: Show a VLAN
       block:
-
         - name: Set names of hosts we connect to
           set_fact:
             to_hosts: "{{interfaces | flatten | difference(inventory_hostname)}}"
@@ -136,5 +135,4 @@
           debug:
             msg: "vlan NOT in range"
           when: not vlan_present
-
     when: inventory_hostname in interfaces
