@@ -1,34 +1,28 @@
 #!/usr/bin/python
 """
-
+Get the neighbor switch name from cdp neighbors output
 """
-import pprint
 
 
 def host_in_output(host, output):
     """
-
+    Find the host name in the output passed
     """
     for line in output.split('\n'):
-        #print("line: " + line)
         if str(host).lower() in str(line).lower():
             return True
-    
-    return False 
+
+    return False
+
 
 def neighbor_port_channels(neighbors, hosts):
     """
-
+    Take cdp neighbors output and find the neighbor for a particular host
     """
     interfaces = []
     for host in hosts:
-#        print("host: " + host)
-#        pprint.pprint(neighbors)
         for result in neighbors['results']:
-#            print('stdout:')
-#            pprint.pprint(result['stdout'][0])
             if host_in_output(host, result['stdout'][0]):
-#                print("appending: " + str(result['item']))
                 interfaces.append(str(result['item']))
 
     return interfaces
@@ -43,4 +37,3 @@ class FilterModule(object):
         return {
             'get_neighbor_port_channels': neighbor_port_channels,
         }
-

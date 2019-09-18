@@ -1,11 +1,12 @@
 #!/usr/bin/python
 """
-
+Find active port channels out of a list
 """
 
 
 def find_port_channels(summary, interfaces):
     """
+    Look for an oper_status of "up" and return interfaces with that status
     """
     active = []
     for interface in interfaces:
