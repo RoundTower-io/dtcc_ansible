@@ -118,30 +118,30 @@
 
       - name: Find port for neighbor
         set_fact:
-          neighbor_ports: "{{ port_channel_cdp_neighbors | get_neighbor_port_channels(to_hosts) }}"
+          neighbor_port: "{{ port_channel_cdp_neighbors | get_neighbor_port_channels(to_hosts) }}"
 
       - name: Audit ports used
         nxos_command:
           commands: show running-config interface {{ item }}
         register: show_interface_contents
         with_items:
-          - "{{ neighbor_ports }}"
+          - "{{ neighbor_port }}"
 
       - name: Parse show run interface contents
         set_fact:
           channel: "{{ show_interface_contents['results'][0]['stdout'][0] | parse_genie(command='show running-config interface item', os='nxos') }}"
         with_items:
-          - "{{ neighbor_ports }}"
+          - "{{ neighbor_port }}"
 
       - name: Set vlan ports
         set_fact:
-          vlan_ports: "{{ channel['interface'][item | lower | string]['trunk_vlans'] }}"
+          vlan_port_channel: "{{ channel['interface'][item | lower | string]['trunk_vlans'] }}"
         with_items:
-          - "{{ neighbor_ports }}"
+          - "{{ neighbor_port }}"
 
       - name: Determine if VLAN in port range
         set_fact:
-          vlan_present: "{{ vlan_ports | vlan_in_range(vlan_number) }}"
+          vlan_present: "{{ vlan_port_channel | vlan_in_range(vlan_number) }}"
 
       - name: Debug vlan IS present
         debug:
@@ -152,5 +152,16 @@
         debug:
           msg: "vlan NOT in range"
         when: not vlan_present
+
+      - name: Add vlan to port channel
+        nxos_config:
+          lines:
+            - switchport trunk allowed vlan add {{ item.0 }}
+          parents: interface {{ item.1 }}
+        with_nested:
+          - "{{ vlan_number }}"
+          - "{{ neighbor_port }}"
+        when: not vlan_present
+
       when: inventory_hostname in interfaces
 
