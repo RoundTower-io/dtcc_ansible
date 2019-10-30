@@ -1,0 +1,3 @@
+[submodule "roles/parse_genie"]
+	path = roles/parse_genie
+	url = https://github.com/clay584/parse_genie.git
