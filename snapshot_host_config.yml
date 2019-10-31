@@ -18,7 +18,7 @@
           - config
 
       - name: Send config to output
-        debug:
-          var: ansible_net_config
+      debug:
+        var: ansible_net_config
 
       when: inventory_hostname in interfaces
