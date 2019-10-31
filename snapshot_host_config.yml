@@ -22,6 +22,6 @@
 #            var: ansible_net_config
 
         - name: save running-config to file
-            local_action: copy content={{ ansible_net_config }} dest={{ ansible_net_hostname }}_{{ context }}.txt
+          local_action: copy content={{ ansible_net_config }} dest={{ ansible_net_hostname }}_{{ context }}.txt
 
       when: inventory_hostname in interfaces
