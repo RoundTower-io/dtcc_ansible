@@ -5,4 +5,4 @@ interfaces:
   n9kv1:
     - Ethernet1/1
     - Ethernet1/3
-    - Ethernet1/5
+    Ethernet1/5
