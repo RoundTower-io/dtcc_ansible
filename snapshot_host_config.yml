@@ -6,19 +6,19 @@
   hosts: switches
   any_errors_fatal: true
   connection: local
-  gather_facts: no
+  gather_facts: false
 
   tasks:
     - name: host snapshot
       block:
 
-      - name: Capture the config
-      nxos_facts:
-        gather_subset:
-          - config
+        - name: Capture the config
+          nxos_facts:
+            gather_subset:
+              - config
 
-      - name: Send config to output
-        debug:
-          var: ansible_net_config
+        - name: Send config to output
+          debug:
+            var: ansible_net_config
 
       when: inventory_hostname in interfaces
