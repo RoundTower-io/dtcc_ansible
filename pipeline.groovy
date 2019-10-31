@@ -13,8 +13,9 @@ node("Ansible") {
     stage("Run Ansible") {
         echo "VLAN is ${params.VLAN}"
         if (fileExists("dtcc_ansible/test_vlans/dtcc/vlan_${params.VLAN}.yml")) {
-            
+            sh "cd dtcc_ansible; /usr/local/bin/ansible-playbook -i ./dtcc_hosts ./snapshot_host_config.yml --extra-vars=\'@test_vlans/dtcc/vlan_${params.VLAN}.yml\'"
             sh "cd dtcc_ansible; /usr/local/bin/ansible-playbook -i ./dtcc_hosts ./create_vlan.yml --extra-vars=\'@test_vlans/dtcc/vlan_${params.VLAN}.yml\'"
+            sh "cd dtcc_ansible; /usr/local/bin/ansible-playbook -i ./dtcc_hosts ./snapshot_host_config.yml --extra-vars=\'@test_vlans/dtcc/vlan_${params.VLAN}.yml\'"
         } else {
             error("Cannot find any configuration file for VLAN ${params.VLAN}")
         }
