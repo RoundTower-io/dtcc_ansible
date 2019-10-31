@@ -17,11 +17,8 @@
             gather_subset:
               - config
 
-#        - name: Send config to output
-#          debug:
-#            var: ansible_net_config
-
-        - name: save running-config to file
-          local_action: copy content={{ ansible_net_config }} dest={{ ansible_net_hostname }}_{{ context }}.txt
+        - name: Send config to output
+          debug:
+            var: ansible_net_config
 
       when: inventory_hostname in interfaces
