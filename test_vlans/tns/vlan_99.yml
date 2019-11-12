@@ -1,8 +1,0 @@
----
-vlan_number: 99
-vlan_name: test_99
-interfaces:
-  n9kv1:
-    - Ethernet1/1
-    - Ethernet1/3
-    Ethernet1/5
