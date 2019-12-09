@@ -1,7 +1,6 @@
 ---
 #
-# Look for interfaces first and verify they aren't in use
-# Verify vlans are not present (via facts)
+# This playbook creates VLANs on NXOS switches and also provisions the links between them.
 #
 # Example input file contents:
 #    vlan_number: 443
