@@ -91,9 +91,9 @@
           commands: show vlan
         register: show_vlan_contents
 
-      - name: Show contents of show_vlan_contents
-        debug:
-          var: show_vlan_contents
+#      - name: Show contents of show_vlan_contents
+#        debug:
+#          var: show_vlan_contents
 
       # Show all our port channels and save the output to 'show_port_channel_summary'
       - name: show port channel summary
@@ -101,9 +101,9 @@
           commands: show port-channel summary
         register: show_port_channel_summary
 
-      - name: Show contents of show_port_channel_summary
-        debug:
-          var: show_port_channel_summary
+#      - name: Show contents of show_port_channel_summary
+#        debug:
+#          var: show_port_channel_summary
 
       # Parse 'show_vlan_contents' with parse_genie
       #
@@ -135,9 +135,9 @@
         set_fact:
           show_vlan_parsed_output: "{{ show_vlan_contents['stdout'][0] | parse_genie(command='show vlan', os='nxos') }}"
 
-      - name: Show contents of show_vlan_parsed_output
-        debug:
-          var: show_vlan_parsed_output
+#      - name: Show contents of show_vlan_parsed_output
+#        debug:
+#          var: show_vlan_parsed_output
 
       # Parse 'show_port_channel_summary' with parse_genie
       #
@@ -166,9 +166,9 @@
         set_fact:
           show_port_channel_summary_output: "{{ show_port_channel_summary['stdout'][0] | parse_genie(command='show port-channel summary', os='nxos') }}"
 
-      - name: Show contents of show_port_channel_summary_output
-        debug:
-          var: show_port_channel_summary_output
+#      - name: Show contents of show_port_channel_summary_output
+#        debug:
+#          var: show_port_channel_summary_output
 
       # Extract just the interfaces associated with the VLAN number we passed
       - name: Set the vlan_interfaces fact
@@ -206,20 +206,41 @@
         with_items:
           - "{{ neighbor_port }}"
           -
-      - name: Show contents of show_interface_contents
-        debug:
-          var: show_interface_contents
+#      - name: Show contents of show_interface_contents
+#        debug:
+#          var: show_interface_contents
 
       # Parse 'show_interface_contents' with parse_genie and save the output to 'channel'
+      #
+      # Turn this:
+      #   "",
+      #   "version 7.0(3)I7(6) Bios:version 08.35 ",
+      #   "",
+      #   "interface port-channel1",
+      #   "  switchport",
+      #   "  switchport mode trunk",
+      #   "  switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094",
+      #   "  spanning-tree port type network",
+      #   "  vpc peer-link"
+      #
+      # Into this:
+      #    "channel": {
+      #        "interface": {
+      #            "port-channel1": {
+      #                "switchport": true,
+      #                "switchport_mode": "trunk",
+      #                "trunk_vlans": "1-99,101-199,201-1399,1401-4094"
+      #            }
+      #        }
       - name: Parse show run interface contents
         set_fact:
           channel: "{{ show_interface_contents['results'][0]['stdout'][0] | parse_genie(command='show running-config interface item', os='nxos') }}"
         with_items:
           - "{{ neighbor_port }}"
 
-      - name: Show contents of channel
-        debug:
-          var: channel
+#      - name: Show contents of channel
+#        debug:
+#          var: channel
 
       # Set the VLAN port channel value by looping through the neighbor ports and identifying trunk vlans interfaces
       - name: Set vlan ports
