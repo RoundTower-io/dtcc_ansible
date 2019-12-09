@@ -3,6 +3,20 @@
 # Look for interfaces first and verify they aren't in use
 # Verify vlans are not present (via facts)
 #
+# Example input file contents:
+#    vlan_number: 443
+#    vlan_name: tennis_443
+#    interfaces:
+#      n95ksw1:
+#        - Eth1/24
+#        - Eth1/25
+#      n95ksw2:
+#        - Eth1/24
+#
+# Notes:
+#  - 'inventory_hostname' = current host
+#
+#
 - name: vlan testing
   hosts: switches
   any_errors_fatal: true
@@ -13,36 +27,43 @@
     - name: Build a VLAN
       block:
 
+      # Lookup the interfaces associated with the current host and get their configuration.
+      # Save the output in the var 'vint'
       - name: Audit ports used
         nxos_command:
           commands: show run int {{ item }}
         register: vint
         loop: "{{ interfaces[inventory_hostname] }}"
 
+      # Look in 'vint' and see if there are any 'vlan' definitions. If there are, we force a failure.
       - name: Check if any interfaces already in a VLAN
         fail:
           msg: Interface already in VLAN
         when: item.stdout[0].find('vlan') != -1
         loop: "{{ vint.results }}"
 
+      # Look in 'vint' for any trunk port definitions.  Again, force a failure if found.
       - name: Check if any interfaces are port channels
         fail:
           msg: Interface is a port channel
         when: item.stdout[0].find('switchport mode trunk') != -1
         loop: "{{ vint.results }}"
 
+      # Make sure each port for 'inventory_hostname' is configured for layer 2
       - name: Ensure ports are configured for layer 2
         nxos_interface:
           name: "{{item}}"
           mode: layer2
         loop: "{{ interfaces[inventory_hostname] }}"
 
+      # Make sure each port is UN-configured before we start.  That ensures there are no residual definitions.
       - name: Ensure ports are in an unconfigured state
         nxos_l2_interface:
           name: "{{item}}"
           state: unconfigured
         loop: "{{ interfaces[inventory_hostname] }}"
 
+      # Create our new VLAN and associate our inferfaces with it.
       - name: Build VLAN
         nxos_vlan:
           vlan_id: "{{ vlan_number }}"
@@ -50,54 +71,87 @@
           state: present
           interfaces: "{{ interfaces[inventory_hostname] }}"
 
+      # We are going to need to parse output from here on, so load the 'parse_genie' role.
       - name: Read in parse_genie role
         include_role:
             name: parse_genie
 
+      # Determine which host we will connect to by
+      #   1. Getting a list of host/interface combinations
+      #   2. Flattening the definitions so that only the host names remain.
+      #   3. Getting the remaining host names EXCEPT our current one.
       - name: Set names of hosts we connect to
         set_fact:
           to_hosts: "{{interfaces | flatten | difference(inventory_hostname)}}"
 
+
+      # Show all our VLANs and save the output to 'show_vlan_contents'
       - name: show vlan  
         nxos_command:
           commands: show vlan
         register: show_vlan_contents
 
+      - name: Show contents of show_vlan_contents
+        debug:
+          var: show_vlan_contents
+
+      # Show all our port channels and save the output to 'show_port_channel_summary'
       - name: show port channel summary
         nxos_command:
           commands: show port-channel summary
         register: show_port_channel_summary
 
+      - name: Show contents of show_port_channel_summary
+        debug:
+          var: show_port_channel_summary
+
+      # Parse 'show_vlan_contents' with parse_genie
       - name: Save show vlan parsed output
         set_fact:
           show_vlan_parsed_output: "{{ show_vlan_contents['stdout'][0] | parse_genie(command='show vlan', os='nxos') }}"
 
+      - name: Show contents of show_vlan_parsed_output
+        debug:
+          var: show_vlan_parsed_output
+
+      # Parse 'show_port_channel_summary' with parse_genie
       - name: Save show port channel summary
         set_fact:
           show_port_channel_summary_output: "{{ show_port_channel_summary['stdout'][0] | parse_genie(command='show port-channel summary', os='nxos') }}"
 
+      - name: Show contents of show_port_channel_summary_output
+        debug:
+          var: show_port_channel_summary_output
+
+      # Extract just the interfaces associated with the VLAN number we passed
       - name: Set the vlan_interfaces fact
         set_fact:
           vlan_interfaces: "{{ show_vlan_parsed_output['vlans'][vlan_number|string]['interfaces'] }}"
 
+      # Pass our VLAN interfaces to a script to identify port channels.  Save the output to 'port_channels'
       - name: Get trunk candidate interfaces
         set_fact:
           port_channels: "{{ vlan_interfaces | port_channels }}"
 
+      # Get a list of active port channels by passing 'show_port_channel_summary_output' to a script that which identifies
+      # interfaces that are up.  Save the output to 'active_port_channels'
       - name: Get ACTIVE port channels
         set_fact:
           active_port_channels: "{{ show_port_channel_summary_output | active_port_channels(port_channels) }}"
 
+      # Loop through the 'active_port_channels' and get the cdp neighbors for each. Save the output to 'port_channel_cdp_neighbors'.
       - name: show cdp neighbors for port channels
         nxos_command:
           commands: show cdp neighbors int {{ item }}
         register: port_channel_cdp_neighbors
         loop: "{{ active_port_channels }}"
 
+      # Take the contents of 'port_channel_cdp_neighbors' and pass it to a script to find the neighbor's port
       - name: Find port for neighbor
         set_fact:
           neighbor_port: "{{ port_channel_cdp_neighbors | get_neighbor_port_channels(to_hosts) }}"
 
+      # Get the contents of the neighbor-facing ports and save it to 'show_interface_contents'
       - name: Audit ports used
         nxos_command:
           commands: show running-config interface {{ item }}
@@ -105,32 +159,32 @@
         with_items:
           - "{{ neighbor_port }}"
 
+      # Parse 'show_interface_contents' with parse_genie and save the output to 'channel'
       - name: Parse show run interface contents
         set_fact:
           channel: "{{ show_interface_contents['results'][0]['stdout'][0] | parse_genie(command='show running-config interface item', os='nxos') }}"
         with_items:
           - "{{ neighbor_port }}"
 
+      # Set the VLAN port channel value by looping through the neighbor ports and identifying trunk vlans interfaces
       - name: Set vlan ports
         set_fact:
           vlan_port_channel: "{{ channel['interface'][item | lower | string]['trunk_vlans'] }}"
         with_items:
           - "{{ neighbor_port }}"
 
+      # Determine of the 'vlan_port_channel' is in the acceptable VLAN range
       - name: Determine if VLAN in port range
         set_fact:
-          vlan_present: "{{ vlan_port_channel | vlan_in_range(vlan_number) }}"
+          vlan_in_range: "{{ vlan_port_channel | vlan_in_range(vlan_number) }}"
 
-      - name: Debug vlan IS present
-        debug:
-          msg: "vlan IN range"
-        when: vlan_present
+      # Force a failure if the VLAN is not in the range we support
+      - name: Make sure we have a VLAN in a supported range
+        fail:
+          msg: VLAN not in range
+        when: not vlan_in_range
 
-      - name: Debug vlan NOT present
-        debug:
-          msg: "vlan NOT in range"
-        when: not vlan_present
-
+      # Finally, we create the VLAN and add the interfaces
       - name: Add vlan to port channel
         nxos_config:
           lines:
@@ -139,7 +193,6 @@
         with_nested:
           - "{{ vlan_number }}"
           - "{{ neighbor_port }}"
-        when: not vlan_present
 
       when: inventory_hostname in interfaces
 
