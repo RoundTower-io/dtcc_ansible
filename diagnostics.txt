@@ -1,0 +1,1077 @@
+[automation@spvlanautomation01 dtcc_ansible]$ /usr/local/bin/ansible-playbook -i ./dtcc_hosts ./delete_vlan.yml --extra-vars='@test_vlans/dtcc/vlan_443.yml'
+
+PLAY [vlan testing] ***********************************************************************************************************************************
+
+TASK [Ensure Eth interfaces are not attached to a VLAN] ***********************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+changed: [n95ksw1] => (item=Eth1/24)
+changed: [n95ksw2] => (item=Eth1/24)
+changed: [n95ksw1] => (item=Eth1/25)
+
+TASK [Delete a VLAN] **********************************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+changed: [n95ksw2]
+changed: [n95ksw1]
+
+PLAY RECAP ********************************************************************************************************************************************
+n7ksw1                     : ok=0    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+n7ksw2                     : ok=0    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+n95ksw1                    : ok=2    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+n95ksw2                    : ok=2    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+[automation@spvlanautomation01 dtcc_ansible]$ clear
+[automation@spvlanautomation01 dtcc_ansible]$ /usr/local/bin/ansible-playbook -i ./dtcc_hosts ./create_vlan.yml --extra-vars='@test_vlans/dtcc/vlan_443.yml'
+
+PLAY [vlan testing] ***********************************************************************************************************************************
+
+TASK [Audit ports used] *******************************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2] => (item=Eth1/24)
+ok: [n95ksw1] => (item=Eth1/24)
+ok: [n95ksw1] => (item=Eth1/25)
+
+TASK [Check if any interfaces already in a VLAN] ******************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n95ksw2] => (item={'invocation': {'module_args': {'username': None, 'authorize': None, 'commands': ['show run int Eth1/24'], 'password': None, 'retries': 10, 'auth_pass': None, 'interval': 1, 'host': None, 'ssh_keyfile': None, 'match': 'all', 'timeout': None, 'provider': None, 'use_ssl': None, 'wait_for': None, 'validate_certs': None, 'port': None, 'transport': None}}, 'stdout_lines': [['!Command: show running-config interface Ethernet1/24', '!Time: Mon Dec  9 12:38:02 2019', '', 'version 7.0(3)I7(2)', '', 'interface Ethernet1/24', '  switchport', '  no shutdown']], 'changed': False, 'stdout': ['!Command: show running-config interface Ethernet1/24\n!Time: Mon Dec  9 12:38:02 2019\n\nversion 7.0(3)I7(2)\n\ninterface Ethernet1/24\n  switchport\n  no shutdown'], 'ansible_facts': {'discovered_interpreter_python': '/usr/bin/python'}, 'failed': False, 'item': 'Eth1/24', 'ansible_loop_var': 'item'})
+skipping: [n95ksw1] => (item={'invocation': {'module_args': {'username': None, 'authorize': None, 'commands': ['show run int Eth1/24'], 'password': None, 'retries': 10, 'auth_pass': None, 'interval': 1, 'host': None, 'ssh_keyfile': None, 'match': 'all', 'timeout': None, 'provider': None, 'use_ssl': None, 'wait_for': None, 'validate_certs': None, 'port': None, 'transport': None}}, 'stdout_lines': [['!Command: show running-config interface Ethernet1/24', '!Running configuration last done at: Mon Dec  9 20:21:11 2019', '!Time: Mon Dec  9 20:21:34 2019', '', 'version 7.0(3)I7(6) Bios:version 08.35 ', '', 'interface Ethernet1/24', '  switchport', '  no shutdown']], 'changed': False, 'stdout': ['!Command: show running-config interface Ethernet1/24\n!Running configuration last done at: Mon Dec  9 20:21:11 2019\n!Time: Mon Dec  9 20:21:34 2019\n\nversion 7.0(3)I7(6) Bios:version 08.35 \n\ninterface Ethernet1/24\n  switchport\n  no shutdown'], 'ansible_facts': {'discovered_interpreter_python': '/usr/bin/python'}, 'failed': False, 'item': 'Eth1/24', 'ansible_loop_var': 'item'})
+skipping: [n95ksw1] => (item={'invocation': {'module_args': {'username': None, 'authorize': None, 'commands': ['show run int Eth1/25'], 'password': None, 'retries': 10, 'auth_pass': None, 'interval': 1, 'host': None, 'ssh_keyfile': None, 'match': 'all', 'timeout': None, 'provider': None, 'use_ssl': None, 'wait_for': None, 'validate_certs': None, 'port': None, 'transport': None}}, 'stdout_lines': [['!Command: show running-config interface Ethernet1/25', '!Running configuration last done at: Mon Dec  9 20:21:11 2019', '!Time: Mon Dec  9 20:21:37 2019', '', 'version 7.0(3)I7(6) Bios:version 08.35 ', '', 'interface Ethernet1/25', '  switchport', '  no shutdown']], 'changed': False, 'stdout': ['!Command: show running-config interface Ethernet1/25\n!Running configuration last done at: Mon Dec  9 20:21:11 2019\n!Time: Mon Dec  9 20:21:37 2019\n\nversion 7.0(3)I7(6) Bios:version 08.35 \n\ninterface Ethernet1/25\n  switchport\n  no shutdown'], 'failed': False, 'item': 'Eth1/25', 'ansible_loop_var': 'item'})
+skipping: [n7ksw2]
+
+TASK [Check if any interfaces are port channels] ******************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n95ksw2] => (item={'invocation': {'module_args': {'username': None, 'authorize': None, 'commands': ['show run int Eth1/24'], 'password': None, 'retries': 10, 'auth_pass': None, 'interval': 1, 'host': None, 'ssh_keyfile': None, 'match': 'all', 'timeout': None, 'provider': None, 'use_ssl': None, 'wait_for': None, 'validate_certs': None, 'port': None, 'transport': None}}, 'stdout_lines': [['!Command: show running-config interface Ethernet1/24', '!Time: Mon Dec  9 12:38:02 2019', '', 'version 7.0(3)I7(2)', '', 'interface Ethernet1/24', '  switchport', '  no shutdown']], 'changed': False, 'stdout': ['!Command: show running-config interface Ethernet1/24\n!Time: Mon Dec  9 12:38:02 2019\n\nversion 7.0(3)I7(2)\n\ninterface Ethernet1/24\n  switchport\n  no shutdown'], 'ansible_facts': {'discovered_interpreter_python': '/usr/bin/python'}, 'failed': False, 'item': 'Eth1/24', 'ansible_loop_var': 'item'})
+skipping: [n95ksw1] => (item={'invocation': {'module_args': {'username': None, 'authorize': None, 'commands': ['show run int Eth1/24'], 'password': None, 'retries': 10, 'auth_pass': None, 'interval': 1, 'host': None, 'ssh_keyfile': None, 'match': 'all', 'timeout': None, 'provider': None, 'use_ssl': None, 'wait_for': None, 'validate_certs': None, 'port': None, 'transport': None}}, 'stdout_lines': [['!Command: show running-config interface Ethernet1/24', '!Running configuration last done at: Mon Dec  9 20:21:11 2019', '!Time: Mon Dec  9 20:21:34 2019', '', 'version 7.0(3)I7(6) Bios:version 08.35 ', '', 'interface Ethernet1/24', '  switchport', '  no shutdown']], 'changed': False, 'stdout': ['!Command: show running-config interface Ethernet1/24\n!Running configuration last done at: Mon Dec  9 20:21:11 2019\n!Time: Mon Dec  9 20:21:34 2019\n\nversion 7.0(3)I7(6) Bios:version 08.35 \n\ninterface Ethernet1/24\n  switchport\n  no shutdown'], 'ansible_facts': {'discovered_interpreter_python': '/usr/bin/python'}, 'failed': False, 'item': 'Eth1/24', 'ansible_loop_var': 'item'})
+skipping: [n95ksw1] => (item={'invocation': {'module_args': {'username': None, 'authorize': None, 'commands': ['show run int Eth1/25'], 'password': None, 'retries': 10, 'auth_pass': None, 'interval': 1, 'host': None, 'ssh_keyfile': None, 'match': 'all', 'timeout': None, 'provider': None, 'use_ssl': None, 'wait_for': None, 'validate_certs': None, 'port': None, 'transport': None}}, 'stdout_lines': [['!Command: show running-config interface Ethernet1/25', '!Running configuration last done at: Mon Dec  9 20:21:11 2019', '!Time: Mon Dec  9 20:21:37 2019', '', 'version 7.0(3)I7(6) Bios:version 08.35 ', '', 'interface Ethernet1/25', '  switchport', '  no shutdown']], 'changed': False, 'stdout': ['!Command: show running-config interface Ethernet1/25\n!Running configuration last done at: Mon Dec  9 20:21:11 2019\n!Time: Mon Dec  9 20:21:37 2019\n\nversion 7.0(3)I7(6) Bios:version 08.35 \n\ninterface Ethernet1/25\n  switchport\n  no shutdown'], 'failed': False, 'item': 'Eth1/25', 'ansible_loop_var': 'item'})
+skipping: [n7ksw2]
+
+TASK [Ensure ports are configured for layer 2] ********************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2] => (item=Eth1/24)
+ok: [n95ksw1] => (item=Eth1/24)
+ok: [n95ksw1] => (item=Eth1/25)
+
+TASK [Ensure ports are in an unconfigured state] ******************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw1] => (item=Eth1/24)
+ok: [n95ksw2] => (item=Eth1/24)
+ok: [n95ksw1] => (item=Eth1/25)
+
+TASK [Build VLAN] *************************************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+changed: [n95ksw2]
+changed: [n95ksw1]
+
+TASK [Read in parse_genie role] ***********************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+
+TASK [Set names of hosts we connect to] ***************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2]
+ok: [n95ksw1]
+
+TASK [show vlan] **************************************************************************************************************************************
+skipping: [n7ksw2]
+skipping: [n7ksw1]
+ok: [n95ksw2]
+ok: [n95ksw1]
+
+TASK [Show contents of show_vlan_contents] ************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw1] => {
+    "show_vlan_contents": {
+        "changed": false,
+        "failed": false,
+        "stdout": [
+            "VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Po1, Po11, Po12, Po21, Po400\n                                                Eth1/1, Eth1/2, Eth1/30, Eth1/31\n                                                Eth1/33, Eth1/44, Eth1/45\n                                                Eth2/4, Eth2/5\n99   netapps_rep                      active    Po1, Po11, Po12, Po21, Eth1/1\n                                                Eth1/2, Eth1/44, Eth1/45, Eth2/4\n103  VLAN0103                         active    Po1, Po11, Po12, Po21, Eth1/1\n                                                Eth1/2, Eth1/44, Eth1/45, Eth2/4\n142  LAB-vlan                         active    Po1, Po11, Po12, Po21, Eth1/1\n                                                Eth1/2, Eth1/3, Eth1/44, Eth1/45\n                                                Eth2/3, Eth2/4\n200  VLAN0200                         active    Po3, Po11, Po12, Po21, Eth1/44\n                                                Eth1/45, Eth2/2, Eth2/4, Eth2/47\n                                                Eth2/48\n404  tennis_404                       active    Po1, Po11, Po12, Po21, Eth1/1\n                                                Eth1/2, Eth1/20, Eth1/21\n                                                Eth1/23, Eth1/44, Eth1/45\n                                                Eth2/4\n443  tennis_443                       active    Po1, Po11, Po12, Po21, Eth1/1\n                                                Eth1/2, Eth1/24, Eth1/25\n                                                Eth1/44, Eth1/45, Eth2/4\n499  KrisSam-vlan                     active    Po1, Po11, Po12, Po21, Eth1/1\n                                                Eth1/2, Eth1/44, Eth1/45, Eth2/4\n530  MrGarrison-vlan                  active    Po1, Po11, Po12, Po21, Eth1/1\n                                                Eth1/2, Eth1/6, Eth1/44, Eth1/45\n                                                Eth2/4\n1292 Nutanix_Repl                     active    Po1, Po11, Po12, Po21, Eth1/1\n                                                Eth1/2, Eth1/44, Eth1/45, Eth2/4\n1400 SIFMU_Prod_Repl_Net1             active    Po11, Po12, Po21, Eth1/44\n                                                Eth1/45, Eth2/4\n\nVLAN Type         Vlan-mode\n---- -----        ----------\n1    enet         CE     \n99   enet         CE     \n103  enet         CE     \n142  enet         CE     \n200  enet         CE     \n404  enet         CE     \n443  enet         CE     \n499  enet         CE     \n530  enet         CE     \n1292 enet         CE     \n1400 enet         CE     \n\nRemote SPAN VLANs\n-------------------------------------------------------------------------------\n\nPrimary  Secondary  Type             Ports\n-------  ---------  ---------------  -------------------------------------------"
+        ],
+        "stdout_lines": [
+            [
+                "VLAN Name                             Status    Ports",
+                "---- -------------------------------- --------- -------------------------------",
+                "1    default                          active    Po1, Po11, Po12, Po21, Po400",
+                "                                                Eth1/1, Eth1/2, Eth1/30, Eth1/31",
+                "                                                Eth1/33, Eth1/44, Eth1/45",
+                "                                                Eth2/4, Eth2/5",
+                "99   netapps_rep                      active    Po1, Po11, Po12, Po21, Eth1/1",
+                "                                                Eth1/2, Eth1/44, Eth1/45, Eth2/4",
+                "103  VLAN0103                         active    Po1, Po11, Po12, Po21, Eth1/1",
+                "                                                Eth1/2, Eth1/44, Eth1/45, Eth2/4",
+                "142  LAB-vlan                         active    Po1, Po11, Po12, Po21, Eth1/1",
+                "                                                Eth1/2, Eth1/3, Eth1/44, Eth1/45",
+                "                                                Eth2/3, Eth2/4",
+                "200  VLAN0200                         active    Po3, Po11, Po12, Po21, Eth1/44",
+                "                                                Eth1/45, Eth2/2, Eth2/4, Eth2/47",
+                "                                                Eth2/48",
+                "404  tennis_404                       active    Po1, Po11, Po12, Po21, Eth1/1",
+                "                                                Eth1/2, Eth1/20, Eth1/21",
+                "                                                Eth1/23, Eth1/44, Eth1/45",
+                "                                                Eth2/4",
+                "443  tennis_443                       active    Po1, Po11, Po12, Po21, Eth1/1",
+                "                                                Eth1/2, Eth1/24, Eth1/25",
+                "                                                Eth1/44, Eth1/45, Eth2/4",
+                "499  KrisSam-vlan                     active    Po1, Po11, Po12, Po21, Eth1/1",
+                "                                                Eth1/2, Eth1/44, Eth1/45, Eth2/4",
+                "530  MrGarrison-vlan                  active    Po1, Po11, Po12, Po21, Eth1/1",
+                "                                                Eth1/2, Eth1/6, Eth1/44, Eth1/45",
+                "                                                Eth2/4",
+                "1292 Nutanix_Repl                     active    Po1, Po11, Po12, Po21, Eth1/1",
+                "                                                Eth1/2, Eth1/44, Eth1/45, Eth2/4",
+                "1400 SIFMU_Prod_Repl_Net1             active    Po11, Po12, Po21, Eth1/44",
+                "                                                Eth1/45, Eth2/4",
+                "",
+                "VLAN Type         Vlan-mode",
+                "---- -----        ----------",
+                "1    enet         CE     ",
+                "99   enet         CE     ",
+                "103  enet         CE     ",
+                "142  enet         CE     ",
+                "200  enet         CE     ",
+                "404  enet         CE     ",
+                "443  enet         CE     ",
+                "499  enet         CE     ",
+                "530  enet         CE     ",
+                "1292 enet         CE     ",
+                "1400 enet         CE     ",
+                "",
+                "Remote SPAN VLANs",
+                "-------------------------------------------------------------------------------",
+                "",
+                "Primary  Secondary  Type             Ports",
+                "-------  ---------  ---------------  -------------------------------------------"
+            ]
+        ]
+    }
+}
+ok: [n95ksw2] => {
+    "show_vlan_contents": {
+        "changed": false,
+        "failed": false,
+        "stdout": [
+            "VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Po1, Po11, Po12, Eth1/1, Eth1/2\n                                                Eth1/43, Eth1/44, Eth2/10\n                                                Eth2/41\n99   netapps_rep                      active    Po1, Po11, Po12, Eth1/1, Eth1/2\n                                                Eth1/43, Eth1/44\n100  VLAN0100                         active    Po3, Po11, Po12, Eth1/43\n                                                Eth1/44, Eth2/2, Eth2/47\n                                                Eth2/48\n101  lab-vb-switch-vlan               active    Po1, Po11, Po12, Eth1/1, Eth1/2\n                                                Eth1/43, Eth1/44, Eth2/17\n                                                Eth2/18, Eth2/19, Eth2/20\n                                                Eth2/21, Eth2/22, Eth2/23\n                                                Eth2/24, Eth2/25, Eth2/26\n                                                Eth2/27, Eth2/28, Eth2/29\n                                                Eth2/30, Eth2/31, Eth2/32\n103  VLAN0103                         active    Po1, Po11, Po12, Eth1/1, Eth1/2\n                                                Eth1/43, Eth1/44\n142  LAB-vlan                         active    Po1, Po11, Po12, Eth1/1, Eth1/2\n                                                Eth1/3, Eth1/43, Eth1/44\n200  VLAN0200                         active    Po3, Po11, Po12, Eth1/43\n                                                Eth1/44, Eth2/2, Eth2/47\n                                                Eth2/48\n404  tennis_404                       active    Po1, Po11, Po12, Po400, Eth1/1\n                                                Eth1/2, Eth1/43, Eth1/44, Eth2/5\n                                                Eth2/40\n443  tennis_443                       active    Po1, Po11, Po12, Eth1/1, Eth1/2\n                                                Eth1/24, Eth1/43, Eth1/44\n499  KrisSam-vlan                     active    Po1, Po11, Po12, Eth1/1, Eth1/2\n                                                Eth1/43, Eth1/44\n530  MrGarrison-vlan                  active    Po1, Po11, Po12, Eth1/1, Eth1/2\n                                                Eth1/6, Eth1/43, Eth1/44\n1292 Nutanix_Repl                     active    Po1, Po11, Po12, Eth1/1, Eth1/2\n                                                Eth1/43, Eth1/44\n1400 SIFMU_Prod_Repl_Net1             active    Po11, Po12, Eth1/43, Eth1/44\n\nVLAN Type         Vlan-mode\n---- -----        ----------\n1    enet         CE     \n99   enet         CE     \n100  enet         CE     \n101  enet         CE     \n103  enet         CE     \n142  enet         CE     \n200  enet         CE     \n404  enet         CE     \n443  enet         CE     \n499  enet         CE     \n530  enet         CE     \n1292 enet         CE     \n1400 enet         CE     \n\nRemote SPAN VLANs\n-------------------------------------------------------------------------------\n\nPrimary  Secondary  Type             Ports\n-------  ---------  ---------------  -------------------------------------------"
+        ],
+        "stdout_lines": [
+            [
+                "VLAN Name                             Status    Ports",
+                "---- -------------------------------- --------- -------------------------------",
+                "1    default                          active    Po1, Po11, Po12, Eth1/1, Eth1/2",
+                "                                                Eth1/43, Eth1/44, Eth2/10",
+                "                                                Eth2/41",
+                "99   netapps_rep                      active    Po1, Po11, Po12, Eth1/1, Eth1/2",
+                "                                                Eth1/43, Eth1/44",
+                "100  VLAN0100                         active    Po3, Po11, Po12, Eth1/43",
+                "                                                Eth1/44, Eth2/2, Eth2/47",
+                "                                                Eth2/48",
+                "101  lab-vb-switch-vlan               active    Po1, Po11, Po12, Eth1/1, Eth1/2",
+                "                                                Eth1/43, Eth1/44, Eth2/17",
+                "                                                Eth2/18, Eth2/19, Eth2/20",
+                "                                                Eth2/21, Eth2/22, Eth2/23",
+                "                                                Eth2/24, Eth2/25, Eth2/26",
+                "                                                Eth2/27, Eth2/28, Eth2/29",
+                "                                                Eth2/30, Eth2/31, Eth2/32",
+                "103  VLAN0103                         active    Po1, Po11, Po12, Eth1/1, Eth1/2",
+                "                                                Eth1/43, Eth1/44",
+                "142  LAB-vlan                         active    Po1, Po11, Po12, Eth1/1, Eth1/2",
+                "                                                Eth1/3, Eth1/43, Eth1/44",
+                "200  VLAN0200                         active    Po3, Po11, Po12, Eth1/43",
+                "                                                Eth1/44, Eth2/2, Eth2/47",
+                "                                                Eth2/48",
+                "404  tennis_404                       active    Po1, Po11, Po12, Po400, Eth1/1",
+                "                                                Eth1/2, Eth1/43, Eth1/44, Eth2/5",
+                "                                                Eth2/40",
+                "443  tennis_443                       active    Po1, Po11, Po12, Eth1/1, Eth1/2",
+                "                                                Eth1/24, Eth1/43, Eth1/44",
+                "499  KrisSam-vlan                     active    Po1, Po11, Po12, Eth1/1, Eth1/2",
+                "                                                Eth1/43, Eth1/44",
+                "530  MrGarrison-vlan                  active    Po1, Po11, Po12, Eth1/1, Eth1/2",
+                "                                                Eth1/6, Eth1/43, Eth1/44",
+                "1292 Nutanix_Repl                     active    Po1, Po11, Po12, Eth1/1, Eth1/2",
+                "                                                Eth1/43, Eth1/44",
+                "1400 SIFMU_Prod_Repl_Net1             active    Po11, Po12, Eth1/43, Eth1/44",
+                "",
+                "VLAN Type         Vlan-mode",
+                "---- -----        ----------",
+                "1    enet         CE     ",
+                "99   enet         CE     ",
+                "100  enet         CE     ",
+                "101  enet         CE     ",
+                "103  enet         CE     ",
+                "142  enet         CE     ",
+                "200  enet         CE     ",
+                "404  enet         CE     ",
+                "443  enet         CE     ",
+                "499  enet         CE     ",
+                "530  enet         CE     ",
+                "1292 enet         CE     ",
+                "1400 enet         CE     ",
+                "",
+                "Remote SPAN VLANs",
+                "-------------------------------------------------------------------------------",
+                "",
+                "Primary  Secondary  Type             Ports",
+                "-------  ---------  ---------------  -------------------------------------------"
+            ]
+        ]
+    }
+}
+
+TASK [show port channel summary] **********************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2]
+ok: [n95ksw1]
+
+TASK [Show contents of show_port_channel_summary] *****************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw1] => {
+    "show_port_channel_summary": {
+        "changed": false,
+        "failed": false,
+        "stdout": [
+            "Flags:  D - Down        P - Up in port-channel (members)\n        I - Individual  H - Hot-standby (LACP only)\n        s - Suspended   r - Module-removed\n        b - BFD Session Wait\n        S - Switched    R - Routed\n        U - Up (port-channel)\n        p - Up in delay-lacp mode (member)\n        M - Not in use. Min-links not met\n--------------------------------------------------------------------------------\nGroup Port-       Type     Protocol  Member Ports\n      Channel\n--------------------------------------------------------------------------------\n1     Po1(SU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)    \n2     Po2(RU)     Eth      LACP      Eth1/47(P)   Eth1/48(P)   \n3     Po3(SD)     Eth      LACP      Eth2/47(s)   Eth2/48(s)   \n11    Po11(SD)    Eth      NONE      --\n12    Po12(SD)    Eth      LACP      Eth1/44(s)   \n21    Po21(SD)    Eth      LACP      Eth1/45(s)   \n400   Po400(SU)   Eth      NONE      Eth2/5(P)"
+        ],
+        "stdout_lines": [
+            [
+                "Flags:  D - Down        P - Up in port-channel (members)",
+                "        I - Individual  H - Hot-standby (LACP only)",
+                "        s - Suspended   r - Module-removed",
+                "        b - BFD Session Wait",
+                "        S - Switched    R - Routed",
+                "        U - Up (port-channel)",
+                "        p - Up in delay-lacp mode (member)",
+                "        M - Not in use. Min-links not met",
+                "--------------------------------------------------------------------------------",
+                "Group Port-       Type     Protocol  Member Ports",
+                "      Channel",
+                "--------------------------------------------------------------------------------",
+                "1     Po1(SU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)    ",
+                "2     Po2(RU)     Eth      LACP      Eth1/47(P)   Eth1/48(P)   ",
+                "3     Po3(SD)     Eth      LACP      Eth2/47(s)   Eth2/48(s)   ",
+                "11    Po11(SD)    Eth      NONE      --",
+                "12    Po12(SD)    Eth      LACP      Eth1/44(s)   ",
+                "21    Po21(SD)    Eth      LACP      Eth1/45(s)   ",
+                "400   Po400(SU)   Eth      NONE      Eth2/5(P)"
+            ]
+        ]
+    }
+}
+ok: [n95ksw2] => {
+    "show_port_channel_summary": {
+        "changed": false,
+        "failed": false,
+        "stdout": [
+            "Flags:  D - Down        P - Up in port-channel (members)\n        I - Individual  H - Hot-standby (LACP only)\n        s - Suspended   r - Module-removed\n        b - BFD Session Wait\n        S - Switched    R - Routed\n        U - Up (port-channel)\n        p - Up in delay-lacp mode (member)\n        M - Not in use. Min-links not met\n--------------------------------------------------------------------------------\nGroup Port-       Type     Protocol  Member Ports\n      Channel\n--------------------------------------------------------------------------------\n1     Po1(SU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)    \n2     Po2(RU)     Eth      LACP      Eth1/47(P)   Eth1/48(P)   \n3     Po3(SD)     Eth      LACP      Eth2/47(D)   Eth2/48(D)   \n11    Po11(SU)    Eth      LACP      Eth1/43(P)   \n12    Po12(SD)    Eth      LACP      Eth1/44(s)   \n400   Po400(SU)   Eth      NONE      Eth2/5(P)"
+        ],
+        "stdout_lines": [
+            [
+                "Flags:  D - Down        P - Up in port-channel (members)",
+                "        I - Individual  H - Hot-standby (LACP only)",
+                "        s - Suspended   r - Module-removed",
+                "        b - BFD Session Wait",
+                "        S - Switched    R - Routed",
+                "        U - Up (port-channel)",
+                "        p - Up in delay-lacp mode (member)",
+                "        M - Not in use. Min-links not met",
+                "--------------------------------------------------------------------------------",
+                "Group Port-       Type     Protocol  Member Ports",
+                "      Channel",
+                "--------------------------------------------------------------------------------",
+                "1     Po1(SU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)    ",
+                "2     Po2(RU)     Eth      LACP      Eth1/47(P)   Eth1/48(P)   ",
+                "3     Po3(SD)     Eth      LACP      Eth2/47(D)   Eth2/48(D)   ",
+                "11    Po11(SU)    Eth      LACP      Eth1/43(P)   ",
+                "12    Po12(SD)    Eth      LACP      Eth1/44(s)   ",
+                "400   Po400(SU)   Eth      NONE      Eth2/5(P)"
+            ]
+        ]
+    }
+}
+
+TASK [Save show vlan parsed output] *******************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2]
+ok: [n95ksw1]
+
+TASK [Show contents of show_vlan_parsed_output] *******************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2] => {
+    "show_vlan_parsed_output": {
+        "vlans": {
+            "1": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/43",
+                    "Ethernet1/44",
+                    "Ethernet2/10",
+                    "Ethernet2/41"
+                ],
+                "mode": "ce",
+                "name": "default",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "1"
+            },
+            "100": {
+                "interfaces": [
+                    "Port-channel3",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/43",
+                    "Ethernet1/44",
+                    "Ethernet2/2",
+                    "Ethernet2/47",
+                    "Ethernet2/48"
+                ],
+                "mode": "ce",
+                "name": "VLAN0100",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "100"
+            },
+            "101": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/43",
+                    "Ethernet1/44",
+                    "Ethernet2/17",
+                    "Ethernet2/18",
+                    "Ethernet2/19",
+                    "Ethernet2/20",
+                    "Ethernet2/21",
+                    "Ethernet2/22",
+                    "Ethernet2/23",
+                    "Ethernet2/24",
+                    "Ethernet2/25",
+                    "Ethernet2/26",
+                    "Ethernet2/27",
+                    "Ethernet2/28",
+                    "Ethernet2/29",
+                    "Ethernet2/30",
+                    "Ethernet2/31",
+                    "Ethernet2/32"
+                ],
+                "mode": "ce",
+                "name": "lab-vb-switch-vlan",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "101"
+            },
+            "103": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/43",
+                    "Ethernet1/44"
+                ],
+                "mode": "ce",
+                "name": "VLAN0103",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "103"
+            },
+            "1292": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/43",
+                    "Ethernet1/44"
+                ],
+                "mode": "ce",
+                "name": "Nutanix_Repl",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "1292"
+            },
+            "1400": {
+                "interfaces": [
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/43",
+                    "Ethernet1/44"
+                ],
+                "mode": "ce",
+                "name": "SIFMU_Prod_Repl_Net1",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "1400"
+            },
+            "142": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/3",
+                    "Ethernet1/43",
+                    "Ethernet1/44"
+                ],
+                "mode": "ce",
+                "name": "LAB-vlan",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "142"
+            },
+            "200": {
+                "interfaces": [
+                    "Port-channel3",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/43",
+                    "Ethernet1/44",
+                    "Ethernet2/2",
+                    "Ethernet2/47",
+                    "Ethernet2/48"
+                ],
+                "mode": "ce",
+                "name": "VLAN0200",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "200"
+            },
+            "404": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel400",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/43",
+                    "Ethernet1/44",
+                    "Ethernet2/5",
+                    "Ethernet2/40"
+                ],
+                "mode": "ce",
+                "name": "tennis_404",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "404"
+            },
+            "443": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/24",
+                    "Ethernet1/43",
+                    "Ethernet1/44"
+                ],
+                "mode": "ce",
+                "name": "tennis_443",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "443"
+            },
+            "499": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/43",
+                    "Ethernet1/44"
+                ],
+                "mode": "ce",
+                "name": "KrisSam-vlan",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "499"
+            },
+            "530": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/6",
+                    "Ethernet1/43",
+                    "Ethernet1/44"
+                ],
+                "mode": "ce",
+                "name": "MrGarrison-vlan",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "530"
+            },
+            "99": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/43",
+                    "Ethernet1/44"
+                ],
+                "mode": "ce",
+                "name": "netapps_rep",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "99"
+            }
+        }
+    }
+}
+ok: [n95ksw1] => {
+    "show_vlan_parsed_output": {
+        "vlans": {
+            "1": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel21",
+                    "Port-channel400",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/30",
+                    "Ethernet1/31",
+                    "Ethernet1/33",
+                    "Ethernet1/44",
+                    "Ethernet1/45",
+                    "Ethernet2/4",
+                    "Ethernet2/5"
+                ],
+                "mode": "ce",
+                "name": "default",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "1"
+            },
+            "103": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel21",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/44",
+                    "Ethernet1/45",
+                    "Ethernet2/4"
+                ],
+                "mode": "ce",
+                "name": "VLAN0103",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "103"
+            },
+            "1292": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel21",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/44",
+                    "Ethernet1/45",
+                    "Ethernet2/4"
+                ],
+                "mode": "ce",
+                "name": "Nutanix_Repl",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "1292"
+            },
+            "1400": {
+                "interfaces": [
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel21",
+                    "Ethernet1/44",
+                    "Ethernet1/45",
+                    "Ethernet2/4"
+                ],
+                "mode": "ce",
+                "name": "SIFMU_Prod_Repl_Net1",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "1400"
+            },
+            "142": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel21",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/3",
+                    "Ethernet1/44",
+                    "Ethernet1/45",
+                    "Ethernet2/3",
+                    "Ethernet2/4"
+                ],
+                "mode": "ce",
+                "name": "LAB-vlan",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "142"
+            },
+            "200": {
+                "interfaces": [
+                    "Port-channel3",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel21",
+                    "Ethernet1/44",
+                    "Ethernet1/45",
+                    "Ethernet2/2",
+                    "Ethernet2/4",
+                    "Ethernet2/47",
+                    "Ethernet2/48"
+                ],
+                "mode": "ce",
+                "name": "VLAN0200",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "200"
+            },
+            "404": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel21",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/20",
+                    "Ethernet1/21",
+                    "Ethernet1/23",
+                    "Ethernet1/44",
+                    "Ethernet1/45",
+                    "Ethernet2/4"
+                ],
+                "mode": "ce",
+                "name": "tennis_404",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "404"
+            },
+            "443": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel21",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/24",
+                    "Ethernet1/25",
+                    "Ethernet1/44",
+                    "Ethernet1/45",
+                    "Ethernet2/4"
+                ],
+                "mode": "ce",
+                "name": "tennis_443",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "443"
+            },
+            "499": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel21",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/44",
+                    "Ethernet1/45",
+                    "Ethernet2/4"
+                ],
+                "mode": "ce",
+                "name": "KrisSam-vlan",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "499"
+            },
+            "530": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel21",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/6",
+                    "Ethernet1/44",
+                    "Ethernet1/45",
+                    "Ethernet2/4"
+                ],
+                "mode": "ce",
+                "name": "MrGarrison-vlan",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "530"
+            },
+            "99": {
+                "interfaces": [
+                    "Port-channel1",
+                    "Port-channel11",
+                    "Port-channel12",
+                    "Port-channel21",
+                    "Ethernet1/1",
+                    "Ethernet1/2",
+                    "Ethernet1/44",
+                    "Ethernet1/45",
+                    "Ethernet2/4"
+                ],
+                "mode": "ce",
+                "name": "netapps_rep",
+                "shutdown": false,
+                "state": "active",
+                "type": "enet",
+                "vlan_id": "99"
+            }
+        }
+    }
+}
+
+TASK [Save show port channel summary] *****************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw1]
+ok: [n95ksw2]
+
+TASK [Show contents of show_port_channel_summary_output] **********************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw1] => {
+    "show_port_channel_summary_output": {
+        "interfaces": {
+            "Port-channel1": {
+                "bundle_id": 1,
+                "layer": "switched",
+                "members": {
+                    "Ethernet1/1": {
+                        "flags": "P"
+                    },
+                    "Ethernet1/2": {
+                        "flags": "P"
+                    }
+                },
+                "oper_status": "up",
+                "protocol": "lacp",
+                "type": "eth"
+            },
+            "Port-channel11": {
+                "bundle_id": 11,
+                "layer": "switched",
+                "members": {},
+                "oper_status": "down",
+                "protocol": "none",
+                "type": "eth"
+            },
+            "Port-channel12": {
+                "bundle_id": 12,
+                "layer": "switched",
+                "members": {
+                    "Ethernet1/44": {
+                        "flags": "s"
+                    }
+                },
+                "oper_status": "down",
+                "protocol": "lacp",
+                "type": "eth"
+            },
+            "Port-channel2": {
+                "bundle_id": 2,
+                "layer": "routed",
+                "members": {
+                    "Ethernet1/47": {
+                        "flags": "P"
+                    },
+                    "Ethernet1/48": {
+                        "flags": "P"
+                    }
+                },
+                "oper_status": "up",
+                "protocol": "lacp",
+                "type": "eth"
+            },
+            "Port-channel21": {
+                "bundle_id": 21,
+                "layer": "switched",
+                "members": {
+                    "Ethernet1/45": {
+                        "flags": "s"
+                    }
+                },
+                "oper_status": "down",
+                "protocol": "lacp",
+                "type": "eth"
+            },
+            "Port-channel3": {
+                "bundle_id": 3,
+                "layer": "switched",
+                "members": {
+                    "Ethernet2/47": {
+                        "flags": "s"
+                    },
+                    "Ethernet2/48": {
+                        "flags": "s"
+                    }
+                },
+                "oper_status": "down",
+                "protocol": "lacp",
+                "type": "eth"
+            },
+            "Port-channel400": {
+                "bundle_id": 400,
+                "layer": "switched",
+                "members": {
+                    "Ethernet2/5": {
+                        "flags": "P"
+                    }
+                },
+                "oper_status": "up",
+                "protocol": "none",
+                "type": "eth"
+            }
+        }
+    }
+}
+ok: [n95ksw2] => {
+    "show_port_channel_summary_output": {
+        "interfaces": {
+            "Port-channel1": {
+                "bundle_id": 1,
+                "layer": "switched",
+                "members": {
+                    "Ethernet1/1": {
+                        "flags": "P"
+                    },
+                    "Ethernet1/2": {
+                        "flags": "P"
+                    }
+                },
+                "oper_status": "up",
+                "protocol": "lacp",
+                "type": "eth"
+            },
+            "Port-channel11": {
+                "bundle_id": 11,
+                "layer": "switched",
+                "members": {
+                    "Ethernet1/43": {
+                        "flags": "P"
+                    }
+                },
+                "oper_status": "up",
+                "protocol": "lacp",
+                "type": "eth"
+            },
+            "Port-channel12": {
+                "bundle_id": 12,
+                "layer": "switched",
+                "members": {
+                    "Ethernet1/44": {
+                        "flags": "s"
+                    }
+                },
+                "oper_status": "down",
+                "protocol": "lacp",
+                "type": "eth"
+            },
+            "Port-channel2": {
+                "bundle_id": 2,
+                "layer": "routed",
+                "members": {
+                    "Ethernet1/47": {
+                        "flags": "P"
+                    },
+                    "Ethernet1/48": {
+                        "flags": "P"
+                    }
+                },
+                "oper_status": "up",
+                "protocol": "lacp",
+                "type": "eth"
+            },
+            "Port-channel3": {
+                "bundle_id": 3,
+                "layer": "switched",
+                "members": {
+                    "Ethernet2/47": {
+                        "flags": "D"
+                    },
+                    "Ethernet2/48": {
+                        "flags": "D"
+                    }
+                },
+                "oper_status": "down",
+                "protocol": "lacp",
+                "type": "eth"
+            },
+            "Port-channel400": {
+                "bundle_id": 400,
+                "layer": "switched",
+                "members": {
+                    "Ethernet2/5": {
+                        "flags": "P"
+                    }
+                },
+                "oper_status": "up",
+                "protocol": "none",
+                "type": "eth"
+            }
+        }
+    }
+}
+
+TASK [Set the vlan_interfaces fact] *******************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw1]
+ok: [n95ksw2]
+
+TASK [Get trunk candidate interfaces] *****************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2]
+ok: [n95ksw1]
+
+TASK [Get ACTIVE port channels] ***********************************************************************************************************************
+skipping: [n7ksw2]
+skipping: [n7ksw1]
+ok: [n95ksw1]
+ok: [n95ksw2]
+
+TASK [show cdp neighbors for port channels] ***********************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2] => (item=Port-channel1)
+ok: [n95ksw1] => (item=Port-channel1)
+ok: [n95ksw2] => (item=Port-channel11)
+
+TASK [Find port for neighbor] *************************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2]
+ok: [n95ksw1]
+
+TASK [Audit ports used] *******************************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw1] => (item=Port-channel1)
+ok: [n95ksw2] => (item=Port-channel1)
+
+TASK [Parse show run interface contents] **************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2] => (item=Port-channel1)
+ok: [n95ksw1] => (item=Port-channel1)
+
+TASK [Show contents of channel] ***********************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2] => {
+    "channel": {
+        "interface": {
+            "port-channel1": {
+                "switchport": true,
+                "switchport_mode": "trunk",
+                "trunk_vlans": "1-99,101-199,201-1399,1401-4094"
+            }
+        }
+    }
+}
+ok: [n95ksw1] => {
+    "channel": {
+        "interface": {
+            "port-channel1": {
+                "switchport": true,
+                "switchport_mode": "trunk",
+                "trunk_vlans": "1-99,101-199,201-1399,1401-4094"
+            }
+        }
+    }
+}
+
+TASK [Set vlan ports] *********************************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw1] => (item=Port-channel1)
+ok: [n95ksw2] => (item=Port-channel1)
+
+TASK [Determine if VLAN in port range] ****************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+ok: [n95ksw2]
+ok: [n95ksw1]
+
+TASK [Make sure we have a VLAN in a supported range] **************************************************************************************************
+skipping: [n95ksw1]
+skipping: [n95ksw2]
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+
+TASK [Add vlan to port channel] ***********************************************************************************************************************
+skipping: [n7ksw1]
+skipping: [n7ksw2]
+changed: [n95ksw2] => (item=[443, 'Port-channel1'])
+changed: [n95ksw1] => (item=[443, 'Port-channel1'])
+
+PLAY RECAP ********************************************************************************************************************************************
+n7ksw1                     : ok=0    changed=0    unreachable=0    failed=0    skipped=28   rescued=0    ignored=0
+n7ksw2                     : ok=0    changed=0    unreachable=0    failed=0    skipped=28   rescued=0    ignored=0
+n95ksw1                    : ok=24   changed=2    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0
+n95ksw2                    : ok=24   changed=2    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0
+
+[automation@spvlanautomation01 dtcc_ansible]$
+
