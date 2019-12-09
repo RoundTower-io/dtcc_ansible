@@ -166,6 +166,10 @@
         with_items:
           - "{{ neighbor_port }}"
 
+      - name: Show contents of channel
+        debug:
+          var: channel
+
       # Set the VLAN port channel value by looping through the neighbor ports and identifying trunk vlans interfaces
       - name: Set vlan ports
         set_fact:
