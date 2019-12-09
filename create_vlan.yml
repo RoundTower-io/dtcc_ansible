@@ -106,6 +106,31 @@
           var: show_port_channel_summary
 
       # Parse 'show_vlan_contents' with parse_genie
+      #
+      # Turn this:
+      #     "443  tennis_443                       active    Po1, Po11, Po12, Po21, Eth1/1",
+      #     "                                                Eth1/2, Eth1/24, Eth1/25",
+      #     "                                                Eth1/44, Eth1/45, Eth2/4",
+      # Into this:
+      #     "443": {
+      #             "interfaces": [
+      #                 "Port-channel1",
+      #                 "Port-channel11",
+      #                 "Port-channel12",
+      #                 "Ethernet1/1",
+      #                 "Ethernet1/2",
+      #                 "Ethernet1/24",
+      #                 "Ethernet1/43",
+      #                 "Ethernet1/44"
+      #             ],
+      #             "mode": "ce",
+      #             "name": "tennis_443",
+      #             "shutdown": false,
+      #             "state": "active",
+      #             "type": "enet",
+      #             "vlan_id": "443"
+      #     }
+      #
       - name: Save show vlan parsed output
         set_fact:
           show_vlan_parsed_output: "{{ show_vlan_contents['stdout'][0] | parse_genie(command='show vlan', os='nxos') }}"
@@ -115,6 +140,28 @@
           var: show_vlan_parsed_output
 
       # Parse 'show_port_channel_summary' with parse_genie
+      #
+      # Turn this:
+      #    "1     Po1(SU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)    ",
+      #
+      # Into this:
+      #    "interfaces": {
+      #        "Port-channel1": {
+      #            "bundle_id": 1,
+      #            "layer": "switched",
+      #            "members": {
+      #                "Ethernet1/1": {
+      #                    "flags": "P"
+      #                },
+      #                "Ethernet1/2": {
+      #                    "flags": "P"
+      #                }
+      #            },
+      #            "oper_status": "up",
+      #            "protocol": "lacp",
+      #            "type": "eth"
+      #        }
+      #
       - name: Save show port channel summary
         set_fact:
           show_port_channel_summary_output: "{{ show_port_channel_summary['stdout'][0] | parse_genie(command='show port-channel summary', os='nxos') }}"
@@ -158,6 +205,10 @@
         register: show_interface_contents
         with_items:
           - "{{ neighbor_port }}"
+          -
+      - name: Show contents of show_interface_contents
+        debug:
+          var: show_interface_contents
 
       # Parse 'show_interface_contents' with parse_genie and save the output to 'channel'
       - name: Parse show run interface contents
